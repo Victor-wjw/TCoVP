@@ -25,8 +25,23 @@
   <main id="main">
     <section class="hero content" id="top" aria-labelledby="project-title">
       <h1 id="project-title">Think Visually Across Space and Time:<br><span>Grounded Reasoning for Video Segmentation</span></h1>
-      <!-- AUTHORS: Add author names, profile links, and affiliations here when available. -->
-      <div class="authors" id="authors"></div>
+      <div class="authors" id="authors" aria-label="Authors and affiliations">
+        <p class="author-names">
+          <span>Junwei Wen<sup>1*</sup></span>,
+          <span>Deshui Miao<sup>1*</sup></span>,
+          <span>Guangming Lu<sup>1</sup></span>,
+          <span>Ming-Hsuan Yang<sup>4</sup></span>,
+          <span>Xin Li<sup>1,2,3†</sup></span>,
+          <span>Wenjie Pei<sup>1,2†</sup></span>
+        </p>
+        <p class="author-affiliations">
+          <span><sup>1</sup>Harbin Institute of Technology, Shenzhen</span>
+          <span><sup>2</sup>Pengcheng Laboratory</span>
+          <span><sup>3</sup>Pazhou Lab (Huangpu)</span>
+          <span><sup>4</sup>University of California at Merced</span>
+        </p>
+        <p class="author-notes"><span><sup>*</sup>Equal contribution.</span><span><sup>†</sup>Corresponding authors.</span></p>
+      </div>
       <div class="resource-links" aria-label="Project resources">
         <!-- RESOURCES: Cite and Watch demo link to their reserved sections. -->
         <button class="button secondary" type="button" disabled title="arXiv link coming soon"><svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 12h6M9 16h6"/></svg><span>arXiv</span></button>
@@ -985,7 +1000,6 @@
           <figure class="paper-figure"><a class="figure-link" href="assets/example-zero-target.png" target="_blank" rel="noopener"><img src="assets/example-zero-target.png" width="2800" height="1279" loading="lazy" alt="Zero-target comparison: Veason-R1 predicts a turtle where none is present, while TCoVP grounds the fish and water and produces an empty target set."></a><figcaption>Grounding visible entities helps avoid an unsupported target prediction.</figcaption></figure>
         </div>
       </div>
-      <details class="limitations"><summary>Limitations and future directions</summary><p>TCoVP uses 16 uniformly sampled frames, so brief events can fall between observations. Cross-entity actions and relations are expressed in language, and final masks can inherit SAM3 propagation errors. Adaptive temporal sampling, denser spatial evidence, and structured interaction representations are promising directions.</p></details>
     </section>
 
     <section class="section citation-section content" id="citation" aria-labelledby="citation-title">

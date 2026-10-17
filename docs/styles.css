@@ -33,7 +33,14 @@ strong { font-weight: 650; }
 .hero { padding: 94px 0 67px; text-align: center; }
 .hero h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(34px, 3.8vw, 51px); line-height: 1.2; font-weight: 500; letter-spacing: -1.7px; text-wrap: balance; }
 .hero h1 span { display: inline-block; font-size: .88em; color: #36536a; margin-top: 12px; letter-spacing: -1.4px; }
-.authors { min-height: 74px; padding: 18px 0; color: var(--muted); font-size: 15px; }
+.authors { padding: 20px 0 22px; color: var(--muted); font-family: Georgia, "Times New Roman", serif; }
+.author-names { color: var(--ink); font-size: 16px; line-height: 1.65; font-weight: 600; }
+.author-names span { white-space: nowrap; }
+.authors sup { font-size: .68em; line-height: 0; vertical-align: super; }
+.author-affiliations { margin-top: 7px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.author-affiliations span { display: inline-block; margin: 0 9px; white-space: nowrap; }
+.author-notes { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; max-width: 320px; margin: 12px auto 0; color: var(--ink); font-size: 12px; line-height: 1.55; text-align: left; }
+.author-notes span { white-space: nowrap; }
 .resource-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 11px; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 108px; padding: 10px 21px; border-radius: 6px; border: 1px solid #b9c4cc; color: var(--ink); background: white; font-size: 13px; line-height: 1.5; font-weight: 550; transition: background .15s, border-color .15s, transform .15s; }
 .button.primary { background: var(--ink); border-color: var(--ink); color: white; }
@@ -161,7 +168,11 @@ figcaption strong { color: #455967; }
   .hero { padding-top: 47px; padding-bottom: 38px; }
   .hero h1 { font-size: 35px; line-height: 1.17; letter-spacing: -1.3px; }
   .hero h1 span { font-size: .8em; letter-spacing: -.8px; line-height: 1.28; margin-top: 17px; }
-  .authors { min-height: 64px; }
+  .authors { padding: 16px 0 20px; }
+  .author-names { font-size: 14px; line-height: 1.75; }
+  .author-affiliations { font-size: 11px; line-height: 1.8; }
+  .author-affiliations span { margin-inline: 5px; }
+  .author-notes { font-size: 11px; }
   .resource-links { gap: 9px; max-width: 355px; margin-inline: auto; }
   .button { font-size: 12px; min-width: 90px; min-height: 43px; padding: 10px 12px; }
   .resource-links .button { gap: 6px; }
