@@ -23,6 +23,7 @@ No build step, framework, analytics, or third-party runtime is required. The pag
 - The hero's animated chain illustrates Figure 1. Its step animation is explanatory and is not synchronized model inference.
 - Internet examples include source attribution, a same-clock original/mask switch, the unchanged generated trace, and explicit qualitative limitations. Sanitized run metadata is stored beside the media. Private server paths, credentials, signed download URLs, and shared-training logs are not bundled.
 - Fonts (Fredoka, Nunito, and JetBrains Mono) are self-hosted; their OFL license files are in `assets/fonts/`.
+- The opening view includes all six authors in manuscript order, with the original affiliation numbers and contribution notes. Four official institution signatures are self-hosted in `assets/affiliations/`; `sources.json` records the official pages, original asset locations and file hashes. White/reverse originals are displayed on navy without recoloring or stretching.
 
 The visual direction is inspired by the [Xiaomi-Lens-0 project page](https://seerray-lab.github.io/Xiaomi-Lens-0/): rounded typography, warm colors, outlined panels, and motion. The implementation and TCoVP-specific presentation are independent.
 

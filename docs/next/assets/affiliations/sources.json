@@ -1,0 +1,54 @@
+{
+  "checked_on": "2026-10-19",
+  "logos": [
+    {
+      "institution": "Harbin Institute of Technology, Shenzhen",
+      "source_url": "https://www.hitsz.edu.cn/",
+      "asset_url": "https://www.hitsz.edu.cn/_upload/tpl/00/0d/13/template13/images/logo.png",
+      "file": "hitsz-logo.png",
+      "width": 365,
+      "height": 67,
+      "format": "transparent PNG",
+      "verified": "Official homepage header logo: HIT emblem, Chinese campus name and English Harbin Institute of Technology Shenzhen. White artwork intended for a dark background; not an anniversary logo.",
+      "sha256": "0e50d9b638801ed7eca30edfd72473a821fe3bc6fa71c2cd7f5d3701d2ed0271"
+    },
+    {
+      "institution": "Pengcheng Laboratory",
+      "source_url": "https://www.pcl.ac.cn/",
+      "asset_url": "https://www.pcl.ac.cn/attachment/core/2022_11/18_09/4a16785fa2699e0d.png",
+      "file": "pengcheng-logo.png",
+      "width": 619,
+      "height": 78,
+      "format": "transparent PNG",
+      "verified": "Official homepage navbar-logo asset: Pengcheng Laboratory seal, Chinese and English name, and official slogan. White lettering intended for a dark background; not an anniversary logo.",
+      "sha256": "29fff3c6696f821f205be118b761cb916696af4f4dabab314d47e9deece360c5"
+    },
+    {
+      "institution": "Pazhou Lab (Huangpu)",
+      "source_url": "https://www.pazhoulab-huangpu.com/",
+      "asset_url": "https://www.pazhoulab-huangpu.com/img/new-logo.32970c35.png",
+      "width": 511,
+      "height": 41,
+      "background": "dark",
+      "variant": "Official homepage white horizontal joint lockup; contains Peng Cheng Laboratory Guangzhou Base (preparatory) and Pazhou Lab Huangpu names.",
+      "verification": "Homepage title and metadata confirm Huangpu branch; logo visually checked; native PNG unmodified.",
+      "sha256": "2701338336bb5be4f4990d55b5f5cdbd2f56bce32e64aae6ae13e2e5626fe33f",
+      "file": "pazhou-huangpu-logo.png"
+    },
+    {
+      "institution": "University of California, Merced",
+      "source_url": "https://uc-merced.foleon.com/public-relations/ucmerced-brand/logos",
+      "asset_page_url": "https://ucmerced.app.box.com/s/kjdlgjpy39cklc0rbhluy2x6erdu2sa0/file/1959280929262",
+      "asset_url": "https://ucmerced.app.box.com/index.php?rm=box_download_shared_file&shared_name=kjdlgjpy39cklc0rbhluy2x6erdu2sa0&file_id=f_1959280929262",
+      "original_filename": "UCMLogos_RGB_LogotypeW.svg",
+      "width": 1816.09,
+      "height": 426.71,
+      "background": "dark",
+      "variant": "Current official standalone white logotype; the brand guide permits standalone logotype for compact applications.",
+      "sha256": "97996e86263972668be2ff606a2ffd747693afa533085135df35b0837f920fea",
+      "verification": "Official brand guide links this public Box library. RGB Digital file is the current standalone white logotype. Rendered with Sharp and visually confirmed UC MERCED; native SVG unmodified.",
+      "file": "ucmerced-logotype-white.svg"
+    }
+  ],
+  "display_note": "Official white/reverse variants, retained in original colors and proportions. Used to identify the author affiliations stated in the manuscript."
+}
