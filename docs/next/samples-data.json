@@ -59,7 +59,8 @@
         "text": "The selected primitive identifies the coach; the recorded replay shows the propagated mask.",
         "thumbnail": "assets/demo-handshake-step-3.webp"
       }
-    ]
+    ],
+    "intervalKind": "action"
   },
   {
     "id": "store",
@@ -121,7 +122,8 @@
         "text": "The selected target primitive is linked to the visible mask in the recorded replay.",
         "thumbnail": "assets/demo-store-step-3.webp"
       }
-    ]
+    ],
+    "intervalKind": "appearance"
   },
   {
     "id": "absence",
@@ -179,6 +181,106 @@
         "label": "Absence",
         "text": "The recorded demo returns Not present and produces no turtle target mask.",
         "thumbnail": "assets/demo-absence-step-3.webp"
+      }
+    ],
+    "absenceDescription": "No turtle is selected; the output is an empty target mask."
+  },
+  {
+    "id": "basketball-final-shot",
+    "title": "Who fell for the fake? · Final shot",
+    "category": "internet",
+    "dataset": "In the wild · excerpt",
+    "model": "TCoVP · Qwen3-VL-4B + SAM3",
+    "runLabel": "RUN 2026-10-19 · 16 REASONING FRAMES",
+    "query": "Who repeatedly jumps in response to fake shots before the other player finally releases the ball?",
+    "sourceUrl": "https://www.bilibili.com/video/BV1Ncht6NEnm/",
+    "sourceLabel": "《闪身步》 · 韩波格_ ↗",
+    "video": "assets/internet/basketball-final-shot/masked.mp4",
+    "rawVideo": "assets/internet/basketball-final-shot/raw.mp4",
+    "maskedVideo": "assets/internet/basketball-final-shot/masked.mp4",
+    "poster": "assets/internet/basketball-final-shot/poster.jpg",
+    "traceUrl": "assets/internet/basketball-final-shot/trace.txt",
+    "mediaAspect": "portrait",
+    "duration": 4.666666666666667,
+    "sourceDuration": 24.633313,
+    "sourceInterval": [
+      20,
+      23.3
+    ],
+    "intervalKind": "action",
+    "mediaKind": "recorded-model-run",
+    "mediaNote": "A separate run on source seconds 20.0–24.63. Replay and Model trace start at 0 s; add 20 s for the original source clock. Same query as the full remix, with no supplied target boxes or masks.",
+    "target": "player_white",
+    "notPresent": false,
+    "resultNote": "The model selects the defender and predicts 0.0–3.3 s in this excerpt (20.0–23.3 s in the source). This is a continuity diagnostic of the same video; compare the full remix to see errors across hard cuts. No benchmark score or annotated ground truth is available.",
+    "steps": [
+      {
+        "time": 0.333333,
+        "label": "First fake",
+        "text": "The defender jumps as the ball handler fakes a shot. The visible color is the actual SAM3 output.",
+        "thumbnail": "assets/internet/basketball-final-shot/step-1.webp"
+      },
+      {
+        "time": 1.8,
+        "label": "Selected anchor",
+        "text": "The model selects player_white at 1.8 s. The selected box prompts SAM3 propagation.",
+        "thumbnail": "assets/internet/basketball-final-shot/step-2.webp"
+      },
+      {
+        "time": 4,
+        "label": "After the interval",
+        "text": "The mask is empty after the predicted interval under the original temporal masking rule.",
+        "thumbnail": "assets/internet/basketball-final-shot/step-3.webp"
+      }
+    ]
+  },
+  {
+    "id": "basketball-remix",
+    "title": "Who fell for the fake? · Full remix",
+    "category": "internet",
+    "dataset": "In the wild · challenge",
+    "model": "TCoVP · Qwen3-VL-4B + SAM3",
+    "runLabel": "RUN 2026-10-19 · 16 REASONING FRAMES",
+    "query": "Who repeatedly jumps in response to fake shots before the other player finally releases the ball?",
+    "summary": "A basketball comedy remix tests target selection across unrelated insert shots.",
+    "sourceUrl": "https://www.bilibili.com/video/BV1Ncht6NEnm/",
+    "sourceLabel": "《闪身步》 · 韩波格_ ↗",
+    "video": "assets/internet/basketball-remix/masked.mp4",
+    "rawVideo": "assets/internet/basketball-remix/raw.mp4",
+    "maskedVideo": "assets/internet/basketball-remix/masked.mp4",
+    "poster": "assets/internet/basketball-remix/poster.jpg",
+    "traceUrl": "assets/internet/basketball-remix/trace.txt",
+    "mediaAspect": "portrait",
+    "duration": 24.666666666666668,
+    "sourceDuration": 24.633313,
+    "sourceInterval": [
+      0,
+      24.6
+    ],
+    "intervalKind": "action",
+    "mediaKind": "recorded-model-run",
+    "mediaNote": "Real checkpoint output on the complete 24.6 s remix. Original and mask views share a 15 fps replay clock. Source watermark retained; no manually supplied boxes or masks.",
+    "target": "defender",
+    "notPresent": false,
+    "resultNote": "Challenge case: the predicted action interval covers the full clip. The trace misdescribes the 13.1 s anchor as a jump, and mask propagation follows unrelated people in the inserted tutorial shots. These errors are retained; this is a qualitative example, not a benchmark score.",
+    "steps": [
+      {
+        "time": 3,
+        "label": "A hard cut",
+        "text": "The propagated mask switches to a person in a tutorial insert — an identity error.",
+        "thumbnail": "assets/internet/basketball-remix/step-1.webp"
+      },
+      {
+        "time": 13.066666666666666,
+        "label": "Selected anchor",
+        "text": "The answer selects defender at 13.1 s. This sampled frame shows the defender, but does not support the trace’s claim that he is jumping.",
+        "thumbnail": "assets/internet/basketball-remix/step-2.webp"
+      },
+      {
+        "time": 22.933333333333334,
+        "label": "Back on court",
+        "text": "The late shot-fake sequence includes the defender jumping; the actual propagated mask is shown here.",
+        "thumbnail": "assets/internet/basketball-remix/step-3.webp"
       }
     ]
   }

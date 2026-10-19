@@ -152,23 +152,141 @@
     if (figureOpener) figureOpener.focus();
   });
 
-  // All sample assets are recorded outputs. Step timestamps seek within the
-  // excerpt; sourceInterval is always labeled separately as source-scene time.
+  // Samples are recorded outputs. Step timestamps use the displayed video clock;
+  // sourceInterval refers separately to the original scene. Paired raw/mask
+  // videos must share one timeline so switching preserves the current moment.
   const sampleList = byId('sample-list');
   const sampleVideo = byId('sample-video');
+  const sampleStage = sampleVideo.parentElement;
   const sampleFilters = [...document.querySelectorAll('[data-sample-filter]')];
+  const sampleViews = [...document.querySelectorAll('[data-sample-view]')];
+  const viewControls = byId('sample-view-controls');
   let samples = [];
   let selectedSample = null;
   let activeFilter = 'all';
   let pendingSeek = null;
+  let selectedView = 'masked';
+  const httpUrl = value => {
+    if (typeof value !== 'string' || !value.trim()) return null;
+    try {
+      const url = new URL(value, document.baseURI);
+      return ['http:', 'https:'].includes(url.protocol) ? url.href : null;
+    } catch { return null; }
+  };
+  const mediaPair = sample => {
+    const raw = httpUrl(sample?.rawVideo), masked = httpUrl(sample?.maskedVideo);
+    return raw && masked && raw !== masked ? { raw, masked } : null;
+  };
+  const traceDetails = byId('sample-trace');
+  const traceContent = byId('sample-trace-content');
+  const traceStatus = byId('sample-trace-status');
+  const traceDownload = byId('sample-trace-download');
+  const traceState = { url: null, generation: 0, loaded: false, controller: null };
+  const sameSiteTraceUrl = value => {
+    const resolved = httpUrl(value);
+    if (!resolved) return null;
+    const url = new URL(resolved);
+    return url.origin === new URL(document.baseURI).origin && !url.username && !url.password && /\.txt$/i.test(url.pathname)
+      ? url.href : null;
+  };
+  const resetSampleTrace = sample => {
+    traceState.controller?.abort();
+    traceState.controller = null;
+    traceState.generation += 1;
+    traceState.url = sameSiteTraceUrl(sample.traceUrl);
+    traceState.loaded = false;
+    traceDetails.open = false;
+    traceDetails.hidden = !traceState.url;
+    traceDetails.removeAttribute('aria-busy');
+    traceContent.textContent = '';
+    traceContent.hidden = true;
+    traceStatus.replaceChildren();
+    traceStatus.hidden = true;
+    if (traceState.url) traceDownload.href = traceState.url;
+    else traceDownload.removeAttribute('href');
+  };
+  traceDetails.addEventListener('toggle', async () => {
+    if (!traceDetails.open || !traceState.url || traceState.loaded || traceState.controller) return;
+    const url = traceState.url;
+    const generation = traceState.generation;
+    const controller = new AbortController();
+    traceState.controller = controller;
+    traceDetails.setAttribute('aria-busy', 'true');
+    traceStatus.textContent = 'Loading original model trace…';
+    traceStatus.hidden = false;
+    try {
+      const response = await fetch(url, { signal: controller.signal, redirect: 'error' });
+      if (!response.ok) throw new Error('Unable to load the model trace');
+      const text = await response.text();
+      if (generation !== traceState.generation || url !== traceState.url) return;
+      traceContent.textContent = text;
+      traceContent.hidden = text.length === 0;
+      traceStatus.textContent = text.length ? '' : 'This trace file is empty.';
+      traceStatus.hidden = text.length > 0;
+      traceState.loaded = true;
+    } catch (error) {
+      if (generation !== traceState.generation || controller.signal.aborted) return;
+      traceStatus.replaceChildren(document.createTextNode('The trace could not be loaded. '));
+      const link = make('a', '', 'Open original trace ↗');
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      traceStatus.append(link);
+    } finally {
+      if (generation === traceState.generation && traceState.controller === controller) {
+        traceState.controller = null;
+        traceDetails.removeAttribute('aria-busy');
+      }
+    }
+  });
+  const sampleSteps = sample => Array.isArray(sample?.steps) ? sample.steps : [];
   const safePlay = () => { const promise = sampleVideo.play(); if (promise) promise.catch(() => {}); };
   const seekSample = time => {
-    if (sampleVideo.readyState >= 1) sampleVideo.currentTime = Math.min(time, Math.max(0, sampleVideo.duration - .05));
-    else pendingSeek = time;
+    const requested = Math.max(0, Number(time) || 0);
+    if (sampleVideo.readyState >= 1) {
+      sampleVideo.currentTime = Number.isFinite(sampleVideo.duration)
+        ? Math.min(requested, Math.max(0, sampleVideo.duration - .05)) : requested;
+    } else pendingSeek = requested;
   };
   sampleVideo.addEventListener('loadedmetadata', () => {
     if (pendingSeek !== null) { seekSample(pendingSeek); pendingSeek = null; }
   });
+  const updateViewButtons = () => {
+    sampleViews.forEach(button => {
+      const active = button.dataset.sampleView === selectedView;
+      button.setAttribute('aria-pressed', String(active));
+      button.classList.toggle('is-active', active);
+    });
+  };
+  sampleViews.forEach(button => button.addEventListener('click', () => {
+    const pair = mediaPair(selectedSample);
+    const view = button.dataset.sampleView;
+    if (!pair || !pair[view] || view === selectedView) return;
+    const time = pendingSeek !== null ? pendingSeek : sampleVideo.currentTime;
+    const playing = !sampleVideo.paused && !sampleVideo.ended;
+    const rate = sampleVideo.playbackRate;
+    sampleVideo.pause();
+    selectedView = view;
+    pendingSeek = time;
+    sampleVideo.src = pair[view];
+    sampleVideo.setAttribute('aria-label', `${view === 'raw' ? 'Original video' : 'TCoVP mask'}: ${selectedSample.title}`);
+    sampleVideo.load();
+    sampleVideo.playbackRate = rate;
+    byId('sample-caption').textContent = selectedSample.mediaNote || 'Recorded output. Original scene intervals, when provided, are labeled separately below.';
+    updateViewButtons();
+    if (playing) safePlay();
+  }));
+  const renderSampleMetadata = sample => {
+    const metadata = byId('sample-meta');
+    metadata.replaceChildren();
+    const source = httpUrl(sample.sourceUrl);
+    if (source) {
+      const link = make('a', '', sample.sourceLabel || 'Source video ↗');
+      link.href = source; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      metadata.append(link);
+    }
+    if (sample.model) metadata.append(make('span', 'sample-model-label', sample.model));
+    if (sample.runLabel) metadata.append(make('span', 'sample-run-label', sample.runLabel));
+    metadata.hidden = metadata.childElementCount === 0;
+  };
   const renderSampleList = () => {
     sampleList.replaceChildren();
     samples.filter(sample => activeFilter === 'all' || sample.category === activeFilter).forEach(sample => {
@@ -180,7 +298,7 @@
       button.setAttribute('aria-label', `Replay ${sample.title}`);
       const image = make('img');
       image.src = sample.poster; image.alt = ''; image.loading = 'lazy'; image.width = 320; image.height = 180;
-      button.append(image, make('strong', '', sample.title), make('small', '', `${sample.dataset} · recorded example`));
+      button.append(image, make('strong', '', sample.title), make('small', '', `${sample.dataset || 'Video reasoning'} · recorded example`));
       button.addEventListener('click', () => {
         const hadFocus = document.activeElement === button;
         selectSample(sample, true);
@@ -193,27 +311,41 @@
     sampleVideo.pause();
     selectedSample = sample;
     pendingSeek = null;
+    selectedView = 'masked';
+    const pair = mediaPair(sample);
+    viewControls.hidden = !pair;
+    updateViewButtons();
+    renderSampleMetadata(sample);
+    resetSampleTrace(sample);
     byId('sample-title').textContent = sample.title;
     byId('sample-query').textContent = `“${sample.query}”`;
-    byId('sample-dataset').textContent = `${sample.dataset} / TCoVP`;
+    byId('sample-dataset').textContent = `${sample.dataset || 'Video reasoning'} / TCoVP`;
     byId('sample-index').textContent = `${String(samples.indexOf(sample) + 1).padStart(2, '0')} / ${String(samples.length).padStart(2, '0')}`;
+    sampleStage.classList.toggle('is-portrait', sample.mediaAspect === 'portrait');
+    byId('sample-player').classList.toggle('has-portrait', sample.mediaAspect === 'portrait');
     sampleVideo.poster = sample.poster;
-    sampleVideo.src = sample.video;
-    sampleVideo.setAttribute('aria-label', `Recorded example: ${sample.title}`);
+    const video = pair ? pair.masked : httpUrl(sample.video) || httpUrl(sample.maskedVideo) || httpUrl(sample.rawVideo);
+    if (video) sampleVideo.src = video;
+    else sampleVideo.removeAttribute('src');
+    sampleVideo.setAttribute('aria-label', `${pair ? 'TCoVP mask' : 'Recorded example'}: ${sample.title}`);
     sampleVideo.load();
-    byId('sample-caption').textContent = 'Recorded excerpt. Player time is replay time; original scene intervals are labeled separately below.';
+    byId('sample-caption').textContent = sample.mediaNote || 'Recorded output. Original scene intervals, when provided, are labeled separately below.';
     document.querySelector('.sample-empty').hidden = !sample.notPresent;
     const evidence = byId('evidence-steps');
+    const steps = sampleSteps(sample);
+    evidence.parentElement.hidden = steps.length === 0;
+    byId('evidence-source').textContent = sample.mediaKind === 'recorded-demo-excerpt' ? 'PAPER + RECORDED DEMO' : 'RECORDED MODEL OUTPUT';
     evidence.replaceChildren();
-    sample.steps.forEach((step, index) => {
+    steps.forEach((step, index) => {
       const button = make('button', `evidence-step${index === 0 ? ' is-active' : ''}`);
       button.type = 'button';
       button.dataset.step = index;
       button.setAttribute('aria-pressed', String(index === 0));
-      button.setAttribute('aria-label', `Seek replay to ${formatTime(step.time)}: ${step.label}`);
+      const timeLabel = sample.mediaKind === 'recorded-model-run' ? `${Number(step.time).toFixed(1)} s` : formatTime(step.time);
+      button.setAttribute('aria-label', `Seek replay to ${timeLabel}: ${step.label}`);
       const thumbnail = make('img');
       thumbnail.src = step.thumbnail; thumbnail.alt = ''; thumbnail.loading = 'lazy'; thumbnail.width = 240; thumbnail.height = 135;
-      button.append(thumbnail, make('span', 'mono', `${formatTime(step.time)} REPLAY`), make('h4', '', step.label), make('p', '', step.text));
+      button.append(thumbnail, make('span', 'mono', `${timeLabel} REPLAY`), make('h4', '', step.label), make('p', '', step.text));
       button.addEventListener('click', () => { seekSample(step.time); safePlay(); });
       evidence.append(button);
     });
@@ -222,22 +354,29 @@
     conclusion.append(make('span', 'tag', sample.notPresent ? 'NO TARGET' : 'SELECTED TARGET'));
     const text = make('p');
     if (sample.notPresent) {
-      text.append(make('strong', '', 'Not present.'), document.createTextNode(' No turtle is selected; the output is an empty target mask.'));
+      text.append(make('strong', '', 'Not present.'), document.createTextNode(` ${sample.absenceDescription || 'The requested target is not present; the output is an empty target mask.'}`));
     } else {
-      text.append(make('strong', '', sample.target.replaceAll('_', ' ')));
-      if (sample.sourceInterval) {
-        const type = sample.id === 'handshake' ? 'predicted action interval' : 'predicted appearance span';
+      if (sample.target) text.append(make('strong', '', String(sample.target).replaceAll('_', ' ')));
+      if (Array.isArray(sample.sourceInterval) && sample.sourceInterval.length === 2 && sample.sourceInterval.every(Number.isFinite)) {
+        const type = ({ action: 'predicted action interval', appearance: 'predicted appearance span' })[sample.intervalKind] || 'predicted interval';
         text.append(document.createTextNode(` · ${type}: ${sample.sourceInterval[0].toFixed(1)}–${sample.sourceInterval[1].toFixed(1)} s in the original scene.`));
       }
     }
     conclusion.append(text);
+    const resultNote = typeof sample.resultNote === 'string' ? sample.resultNote.trim() : '';
+    conclusion.classList.toggle('has-result-note', Boolean(resultNote));
+    if (resultNote) {
+      const note = make('p', 'sample-result-note');
+      note.append(make('strong', '', 'Result note: '), document.createTextNode(resultNote));
+      conclusion.append(note);
+    }
     renderSampleList();
     if (play) safePlay();
   };
   sampleVideo.addEventListener('timeupdate', () => {
     if (!selectedSample) return;
     let current = 0;
-    selectedSample.steps.forEach((step, index) => { if (sampleVideo.currentTime >= step.time - .15) current = index; });
+    sampleSteps(selectedSample).forEach((step, index) => { if (sampleVideo.currentTime >= step.time - .15) current = index; });
     byId('evidence-steps').querySelectorAll('[data-step]').forEach((step, index) => {
       step.classList.toggle('is-active', index === current);
       step.setAttribute('aria-pressed', String(index === current));
@@ -245,12 +384,17 @@
   });
   sampleVideo.addEventListener('error', () => {
     const caption = byId('sample-caption');
-    caption.replaceChildren(document.createTextNode('This excerpt could not be loaded. '));
-    const link = make('a', 'text-link', 'Watch the full recorded demo ↗');
-    link.href = '../assets/video_demo_with_cover.mp4'; caption.append(link);
+    caption.replaceChildren(document.createTextNode('This video could not be loaded. '));
+    const recording = httpUrl(selectedSample?.recording?.source);
+    const source = httpUrl(selectedSample?.sourceUrl);
+    if (recording || source) {
+      const link = make('a', 'text-link', recording ? 'Watch the full recorded demo ↗' : 'View source video ↗');
+      link.href = recording || source; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      caption.append(link);
+    }
   });
   byId('sample-replay').addEventListener('click', () => { if (selectedSample) { seekSample(0); safePlay(); } });
-  sampleFilters.forEach(filter => filter.addEventListener('click', () => {
+  const bindSampleFilter = filter => filter.addEventListener('click', () => {
     activeFilter = filter.dataset.sampleFilter;
     sampleFilters.forEach(item => {
       const active = item === filter;
@@ -259,13 +403,23 @@
     const matching = samples.filter(sample => activeFilter === 'all' || sample.category === activeFilter);
     if (matching.length && !matching.includes(selectedSample)) selectSample(matching[0]);
     else renderSampleList();
-  }));
+  });
+  sampleFilters.forEach(bindSampleFilter);
   fetch('samples-data.json').then(response => {
     if (!response.ok) throw new Error('Unable to load recorded samples');
     return response.json();
   }).then(data => {
     if (!Array.isArray(data) || !data.length) throw new Error('No recorded samples');
     samples = data;
+    if (samples.some(sample => sample.category === 'internet')) {
+      const filter = make('button', '', 'Internet antics');
+      filter.type = 'button';
+      filter.dataset.sampleFilter = 'internet';
+      filter.setAttribute('aria-pressed', 'false');
+      sampleFilters[0].parentElement.append(filter);
+      sampleFilters.push(filter);
+      bindSampleFilter(filter);
+    }
     selectSample(samples[0]);
   }).catch(() => {
     sampleList.append(make('p', 'sample-load-error', 'Examples could not be loaded. Watch the full recorded demonstration above.'));

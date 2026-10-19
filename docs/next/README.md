@@ -18,13 +18,23 @@ No build step, framework, analytics, or third-party runtime is required. The pag
 
 - Scientific content, author information, method illustrations, and reported results follow the supplied **Think Visually Across Space and Time: Grounded Reasoning for Video Segmentation** manuscript. The supplied PDF is bundled in `assets/TCoVP_arXiv.pdf`.
 - `results-data.json` preserves the four full result tables from the original page. The charts use those reported scores; the GroundMoRe headline comparison uses the same Qwen3-VL-4B backbone.
-- `samples-data.json` describes three **recorded demonstrations**, not live inference. Sample video time is the replay clock; predicted intervals refer separately to the original scene clock. The absence example returns an empty target mask.
+- `samples-data.json` combines the three original **recorded demonstrations** with saved checkpoint runs on internet clips. All are replayable outputs, not live inference. Sample video time is the replay clock; predicted intervals refer to the labeled source clock. The absence example returns an empty target mask.
 - The short clips are crops of the existing `docs/assets/video_demo_with_cover.mp4`: hand-clasp at recording seconds 10–30, store at 48–68, and absence at 94–111.4. Each uses the source video viewport at x=476, y=342, width=1032, height=580. Existing annotations are baked into the source recording. Posters and evidence thumbnails are stills from that recording.
 - The hero's animated chain illustrates Figure 1. Its step animation is explanatory and is not synchronized model inference.
-- No private server paths, credentials, or additional remote research outputs are bundled.
+- Internet examples include source attribution, a same-clock original/mask switch, the unchanged generated trace, and explicit qualitative limitations. Sanitized run metadata is stored beside the media. Private server paths, credentials, signed download URLs, and shared-training logs are not bundled.
 - Fonts (Fredoka, Nunito, and JetBrains Mono) are self-hosted; their OFL license files are in `assets/fonts/`.
 
 The visual direction is inspired by the [Xiaomi-Lens-0 project page](https://seerray-lab.github.io/Xiaomi-Lens-0/): rounded typography, warm colors, outlined panels, and motion. The implementation and TCoVP-specific presentation are independent.
+
+## Internet examples
+
+The 2026-10-19 runs use the existing trained TCoVP Qwen3-VL-4B checkpoint with 16 uniformly sampled reasoning frames, the original action prompt and parser, greedy decoding, and SAM3 box-prompt propagation. Dense frames and exported videos use 15 fps. No manual target box, mask, or expected answer is supplied. Raw and masked views have identical frame counts and clocks. The text shown under **Model trace** is the unedited generated response; explanatory cards and result notes are editorial observations.
+
+The basketball source is [《闪身步》 by 韩波格_](https://www.bilibili.com/video/BV1Ncht6NEnm/), published 2026-09-23. Source attribution and watermarks are retained. Source media remains the creator's work; it is not covered by a license for this project's code. The full remix is a challenge case: the model chooses `defender` but predicts the entire clip as the action interval, inaccurately describes the 13.1 s anchor as a jump, and propagates masks onto unrelated people in tutorial inserts. These errors remain visible. The original clip lasts 24.633313 s; the 370-frame export lasts 24.666667 s, with its last observed frame at 24.6 s.
+
+The **Final shot** example is a separate run on source seconds 20.0–24.633313 of that same video, using the exact same query. It is a continuity diagnostic, not an independent source video or a replacement for the full-remix result. The model selects `player_white`, anchored at excerpt time 1.8 s, with predicted excerpt interval 0.0–3.3 s. The page maps that interval to source seconds 20.0–23.3; the untouched trace retains its excerpt clock. The original parser includes dense frame 50 (3.333 s) at the rounded interval endpoint, then suppresses frames 51–69. The 70-frame export is 4.666667 s long.
+
+These demonstrations have no annotated ground truth or measured accuracy and do not alter the paper's benchmark results. The separately tested cinema clip carries a no-reprint flag and is kept outside this public repository.
 
 ## Files
 
