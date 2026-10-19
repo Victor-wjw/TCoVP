@@ -279,7 +279,7 @@
       state.request = null;
       container.removeAttribute('aria-busy');
       const message = note('The results could not be loaded. Read the complete tables on the original project page.');
-      const link = el('a', '', 'Open original results'); link.href = '../#results';
+      const link = el('a', '', 'Open original results'); link.href = '../original.html#results';
       const retry = el('button', 'result-retry', 'Retry'); retry.type = 'button';
       retry.addEventListener('click', initializeResults);
       container.replaceChildren(message, link, retry);

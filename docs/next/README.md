@@ -1,6 +1,6 @@
 # TCoVP — dynamic project page
 
-An additive redesign at `docs/next/`. The original project page and its assets are unchanged. This branch does not change GitHub Pages configuration or replace the existing homepage.
+The dynamic TCoVP page lives at `docs/next/`. On the `feat/tcovp-dynamic-showcase` publishing branch, `docs/index.html` is a minimal HTML entry that redirects to `./next/`. It also provides a clickable link that works without JavaScript. The original homepage is preserved byte-for-byte at `docs/original.html`, with its assets and scripts in their existing locations.
 
 ## Preview
 
@@ -10,7 +10,7 @@ From the repository root:
 python3 -m http.server 8765 --bind 127.0.0.1 --directory docs
 ```
 
-Open <http://127.0.0.1:8765/next/>. Serve the whole `docs` directory: the new page reuses figures and the full demonstration video from `docs/assets`. A web server is required for the JSON-driven samples and results.
+Open <http://127.0.0.1:8765/> to check the publishing redirect, <http://127.0.0.1:8765/next/> for the new page, or <http://127.0.0.1:8765/original.html> for the preserved original. Serve the whole `docs` directory: the new page reuses figures and the full demonstration video from `docs/assets`. A web server is required for the JSON-driven samples and results.
 
 No build step, framework, analytics, or third-party runtime is required. The page supports mobile layouts, keyboard navigation, reduced-motion preferences, pausable animation, image expansion, sample filtering, evidence-frame seeking, and interactive result tables.
 
@@ -33,4 +33,8 @@ The visual direction is inspired by the [Xiaomi-Lens-0 project page](https://see
 - `results.js`, `results-data.json`: result views and manuscript tables.
 - `assets/`: local fonts, PDF, video excerpts, and stills.
 
-To review this design without changing the public homepage, keep it on its feature branch. Publishing or replacing the original page is a separate step.
+## Publishing entry
+
+When GitHub Pages serves `feat/tcovp-dynamic-showcase` from `/docs`, the existing project URL opens `docs/index.html` and redirects to the dynamic page at `next/`. The new page’s original-page link, JavaScript error fallback, and no-JavaScript results link point to `original.html` (with `#results` where appropriate).
+
+`docs/original.html` is byte-for-byte identical to `origin/main:docs/index.html`. The `main` branch is not modified. GitHub Pages source settings are managed separately; these files do not change repository settings.
