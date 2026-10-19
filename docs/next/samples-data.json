@@ -1,5 +1,68 @@
 [
   {
+    "id": "revos-two-sheep",
+    "title": "Two sheep, one repeated interaction",
+    "category": "multiple",
+    "dataset": "ReVOS",
+    "model": "TCoVP · Qwen3-VL-4B + SAM3",
+    "runLabel": "SAVED CHECKPOINT RUN · 16 REASONING FRAMES",
+    "query": "Which object(s) bump heads with another sheep, retreat, and then charge forward to collide again?",
+    "sourceUrl": "https://github.com/cilinyan/ReVOS-api",
+    "sourceLabel": "ReVOS · official dataset ↗",
+    "video": "assets/revos/two-sheep/masked.mp4",
+    "rawVideo": "assets/revos/two-sheep/raw.mp4",
+    "maskedVideo": "assets/revos/two-sheep/masked.mp4",
+    "poster": "assets/revos/two-sheep/poster.webp",
+    "traceUrl": "assets/revos/two-sheep/raw-response.txt",
+    "traceTimeScale": 1,
+    "traceClockNote": "The 30 benchmark frames are replayed at 3 fps, matching this saved run’s timestamp clock.",
+    "traceProvenance": "Unchanged generated reasoning and answer from the saved TCoVP checkpoint run. Both selected object IDs, boxes, and times are preserved.",
+    "traceSourceLabel": "ORIGINAL CHECKPOINT OUTPUT",
+    "duration": 10,
+    "sourceDuration": 10,
+    "targets": [
+      {
+        "id": "sheep_1",
+        "interval": [
+          0,
+          9.7
+        ]
+      },
+      {
+        "id": "sheep_2",
+        "interval": [
+          0,
+          9.7
+        ]
+      }
+    ],
+    "intervalKind": "appearance",
+    "mediaKind": "recorded-model-run",
+    "notPresent": false,
+    "mediaNote": "Saved TCoVP + SAM3 output. Teal shows the union of both selected sheep. The full 30-frame benchmark sequence is replayed at the model’s 3 fps clock; masks are unedited.",
+    "steps": [
+      {
+        "time": 1,
+        "label": "The first collision",
+        "text": "The trace identifies sheep_1 and sheep_2 as the pair that bump heads.",
+        "thumbnail": "assets/revos/two-sheep/step-1.webp"
+      },
+      {
+        "time": 3.3333333333333335,
+        "label": "Retreat, keep both targets",
+        "text": "The same pair separate before the next charge; both remain selected.",
+        "thumbnail": "assets/revos/two-sheep/step-2.webp"
+      },
+      {
+        "time": 5,
+        "label": "Collide again",
+        "text": "The repeated interaction resolves the query to two objects. Both appear in the final answer.",
+        "thumbnail": "assets/revos/two-sheep/step-3.webp"
+      }
+    ],
+    "resultNote": "Both targets have full-clip appearance spans. The saved output is a union mask, so it does not assign separate colors to each sheep. An extra false-positive region is visible in the first frame."
+  },
+  {
     "id": "groundmore-celebration",
     "title": "Who celebrates after the goal?",
     "category": "reasoning",

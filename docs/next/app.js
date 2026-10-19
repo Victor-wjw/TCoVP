@@ -386,6 +386,13 @@
     if (traceState.url) loadSampleTrace();
   };
   const sampleSteps = sample => Array.isArray(sample?.steps) ? sample.steps : [];
+  const sampleTargets = sample => Array.isArray(sample?.targets) ? sample.targets.flatMap(target => {
+    const id = typeof target === 'string' ? target.trim() : typeof target?.id === 'string' ? target.id.trim() : '';
+    if (!id) return [];
+    const interval = typeof target === 'object' && Array.isArray(target.interval) && target.interval.length === 2 && target.interval.every(Number.isFinite)
+      ? target.interval : null;
+    return [{ id, interval }];
+  }) : [];
   const safePlay = () => { const promise = sampleVideo.play(); if (promise) promise.catch(() => {}); };
   const seekSample = time => {
     const requested = Math.max(0, Number(time) || 0);
@@ -438,15 +445,16 @@
   const renderSampleList = () => {
     sampleList.replaceChildren();
     samples.filter(sample => activeFilter === 'all' || sample.category === activeFilter).forEach(sample => {
+      const targetCount = sampleTargets(sample).length;
       const button = make('button', `sample-card${sample === selectedSample ? ' is-active' : ''}`);
       button.type = 'button';
       button.dataset.sampleId = sample.id;
       button.setAttribute('aria-pressed', String(sample === selectedSample));
       button.setAttribute('aria-controls', 'sample-player');
-      button.setAttribute('aria-label', `Replay ${sample.title}`);
+      button.setAttribute('aria-label', `Replay ${sample.title}${targetCount > 1 ? `, ${targetCount} selected targets` : ''}`);
       const image = make('img');
       image.src = sample.poster; image.alt = ''; image.loading = 'lazy'; image.width = 320; image.height = 180;
-      button.append(image, make('strong', '', sample.title), make('small', '', `${sample.dataset || 'Video reasoning'} · recorded example`));
+      button.append(image, make('strong', '', sample.title), make('small', '', `${sample.dataset || 'Video reasoning'} · ${targetCount > 1 ? `${targetCount} targets · ` : ''}recorded example`));
       button.addEventListener('click', () => {
         const hadFocus = document.activeElement === button;
         selectSample(sample, true);
@@ -499,10 +507,25 @@
     });
     const conclusion = byId('sample-conclusion');
     conclusion.replaceChildren();
-    conclusion.append(make('span', 'tag', sample.notPresent ? 'NO TARGET' : 'SELECTED TARGET'));
+    const targets = sampleTargets(sample);
+    conclusion.classList.toggle('has-multiple-targets', !sample.notPresent && targets.length > 1);
+    conclusion.append(make('span', 'tag', sample.notPresent ? 'NO TARGET' : targets.length > 1 ? 'SELECTED TARGETS' : 'SELECTED TARGET'));
     const text = make('p');
     if (sample.notPresent) {
       text.append(make('strong', '', 'Not present.'), document.createTextNode(` ${sample.absenceDescription || 'The requested target is not present; the output is an empty target mask.'}`));
+    } else if (targets.length) {
+      const list = make('ul', 'sample-target-list');
+      list.setAttribute('aria-label', 'Selected targets');
+      targets.forEach(target => {
+        const item = make('li');
+        item.append(make('strong', '', target.id));
+        if (target.interval) {
+          const type = ({ action: 'predicted action interval', appearance: 'predicted appearance span' })[sample.intervalKind] || 'predicted interval';
+          item.append(document.createTextNode(` · ${type}: ${target.interval[0].toFixed(1)}–${target.interval[1].toFixed(1)} s.`));
+        }
+        list.append(item);
+      });
+      conclusion.append(list);
     } else {
       if (sample.target) text.append(make('strong', '', String(sample.target).replaceAll('_', ' ')));
       if (Array.isArray(sample.sourceInterval) && sample.sourceInterval.length === 2 && sample.sourceInterval.every(Number.isFinite)) {
@@ -510,7 +533,7 @@
         text.append(document.createTextNode(` · ${type}: ${sample.sourceInterval[0].toFixed(1)}–${sample.sourceInterval[1].toFixed(1)} s in the original scene.`));
       }
     }
-    conclusion.append(text);
+    if (text.childNodes.length) conclusion.append(text);
     const resultNote = typeof sample.resultNote === 'string' ? sample.resultNote.trim() : '';
     conclusion.classList.toggle('has-result-note', Boolean(resultNote));
     if (resultNote) {
@@ -554,13 +577,13 @@
     else renderSampleList();
   });
   sampleFilters.forEach(bindSampleFilter);
-  fetch('samples-data.json?v=20261019-reasoning', { cache: 'no-cache' }).then(response => {
+  fetch('samples-data.json?v=20261019-multitarget', { cache: 'no-cache' }).then(response => {
     if (!response.ok) throw new Error('Unable to load recorded samples');
     return response.json();
   }).then(data => {
     if (!Array.isArray(data) || !data.length) throw new Error('No recorded samples');
     samples = data;
-    [['reasoning', 'GroundMoRe'], ['internet', 'Internet antics']].forEach(([category, label]) => {
+    [['reasoning', 'GroundMoRe'], ['multiple', 'Multiple targets'], ['internet', 'Internet antics']].forEach(([category, label]) => {
       if (!samples.some(sample => sample.category === category)) return;
       const filter = make('button', '', label);
       filter.type = 'button';

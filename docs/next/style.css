@@ -2997,6 +2997,23 @@ figcaption strong {
   margin:0
 }
 
+.sample-conclusion.has-multiple-targets {
+  align-items:flex-start
+}
+
+.sample-target-list {
+  flex:1;
+  min-width:0;
+  margin:0;
+  padding-left:16px;
+  line-height:1.7;
+  overflow-wrap:anywhere
+}
+
+.sample-target-list li + li {
+  margin-top:5px
+}
+
 .result-insight-card p {
   font-size:13px;
   line-height:1.8;
