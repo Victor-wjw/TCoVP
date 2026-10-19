@@ -30,9 +30,7 @@ The visual direction is inspired by the [Xiaomi-Lens-0 project page](https://see
 
 The 2026-10-19 runs use the existing trained TCoVP Qwen3-VL-4B checkpoint with 16 uniformly sampled reasoning frames, the original action prompt and parser, greedy decoding, and SAM3 box-prompt propagation. Dense frames and exported videos use 15 fps. No manual target box, mask, or expected answer is supplied. Raw and masked views have identical frame counts and clocks. The text shown under **Model trace** is the unedited generated response; explanatory cards and result notes are editorial observations.
 
-The cinema source is [假装电影院检票员看路人的票 by dy远山的远](https://www.bilibili.com/video/BV1bMJX6jEvP/), published 2026-10-16. The example uses source seconds 0–15 with the source attribution and watermark retained. Source media remains the creator's work and is not covered by a license for this project's code.
-
-The model selects `ticket_inspector`, with an answer anchor at 14.9 s and predicted action interval 0.0–14.9 s. This interval covers nearly the entire excerpt rather than separating the ticket check and directing gesture. The 225-frame, 15 fps output retains missing masks in frames 81–95 and 163–177, including the visibly missed 5.9 s close-up. There is no annotated ground truth or measured accuracy, and the example does not alter the paper's benchmark results.
+Internet-video examples are being reselected. The page currently retains the three original recorded demonstrations.
 
 ## Files
 
