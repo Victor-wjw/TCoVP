@@ -186,101 +186,56 @@
     "absenceDescription": "No turtle is selected; the output is an empty target mask."
   },
   {
-    "id": "basketball-final-shot",
-    "title": "Who fell for the fake? · Final shot",
+    "id": "cinema-ticket-prank",
+    "title": "Who checks the ticket, then points the way?",
     "category": "internet",
-    "dataset": "In the wild · excerpt",
+    "dataset": "In the wild · cinema prank",
     "model": "TCoVP · Qwen3-VL-4B + SAM3",
     "runLabel": "RUN 2026-10-19 · 16 REASONING FRAMES",
-    "query": "Who repeatedly jumps in response to fake shots before the other player finally releases the ball?",
-    "sourceUrl": "https://www.bilibili.com/video/BV1Ncht6NEnm/",
-    "sourceLabel": "《闪身步》 · 韩波格_ ↗",
-    "video": "assets/internet/basketball-final-shot/masked.mp4",
-    "rawVideo": "assets/internet/basketball-final-shot/raw.mp4",
-    "maskedVideo": "assets/internet/basketball-final-shot/masked.mp4",
-    "poster": "assets/internet/basketball-final-shot/poster.jpg",
-    "traceUrl": "assets/internet/basketball-final-shot/trace.txt",
+    "query": "Who looks at a visitor's ticket and then directs the visitor to the person behind the counter?",
+    "summary": "Follow the person who checks a ticket and then directs the visitor toward the counter.",
+    "sourceUrl": "https://www.bilibili.com/video/BV1bMJX6jEvP/",
+    "sourceLabel": "假装电影院检票员看路人的票 · dy远山的远 ↗",
+    "video": "assets/internet/cinema-ticket-prank/masked.mp4",
+    "rawVideo": "assets/internet/cinema-ticket-prank/raw.mp4",
+    "maskedVideo": "assets/internet/cinema-ticket-prank/masked.mp4",
+    "poster": "assets/internet/cinema-ticket-prank/poster.jpg",
+    "traceUrl": "assets/internet/cinema-ticket-prank/trace.txt",
     "mediaAspect": "portrait",
-    "duration": 4.666666666666667,
-    "sourceDuration": 24.633313,
-    "sourceInterval": [
-      20,
-      23.3
+    "duration": 15,
+    "sourceDuration": 53.08093,
+    "sourceClip": [
+      0,
+      15
     ],
-    "intervalKind": "action",
-    "mediaKind": "recorded-model-run",
-    "mediaNote": "A separate run on source seconds 20.0–24.63. Replay and Model trace start at 0 s; add 20 s for the original source clock. Same query as the full remix, with no supplied target boxes or masks.",
-    "target": "player_white",
-    "notPresent": false,
-    "resultNote": "The model selects the defender and predicts 0.0–3.3 s in this excerpt (20.0–23.3 s in the source). This is a continuity diagnostic of the same video; compare the full remix to see errors across hard cuts. No benchmark score or annotated ground truth is available.",
-    "steps": [
-      {
-        "time": 0.333333,
-        "label": "First fake",
-        "text": "The defender jumps as the ball handler fakes a shot. The visible color is the actual SAM3 output.",
-        "thumbnail": "assets/internet/basketball-final-shot/step-1.webp"
-      },
-      {
-        "time": 1.8,
-        "label": "Selected anchor",
-        "text": "The model selects player_white at 1.8 s. The selected box prompts SAM3 propagation.",
-        "thumbnail": "assets/internet/basketball-final-shot/step-2.webp"
-      },
-      {
-        "time": 4,
-        "label": "After the interval",
-        "text": "The mask is empty after the predicted interval under the original temporal masking rule.",
-        "thumbnail": "assets/internet/basketball-final-shot/step-3.webp"
-      }
-    ]
-  },
-  {
-    "id": "basketball-remix",
-    "title": "Who fell for the fake? · Full remix",
-    "category": "internet",
-    "dataset": "In the wild · challenge",
-    "model": "TCoVP · Qwen3-VL-4B + SAM3",
-    "runLabel": "RUN 2026-10-19 · 16 REASONING FRAMES",
-    "query": "Who repeatedly jumps in response to fake shots before the other player finally releases the ball?",
-    "summary": "A basketball comedy remix tests target selection across unrelated insert shots.",
-    "sourceUrl": "https://www.bilibili.com/video/BV1Ncht6NEnm/",
-    "sourceLabel": "《闪身步》 · 韩波格_ ↗",
-    "video": "assets/internet/basketball-remix/masked.mp4",
-    "rawVideo": "assets/internet/basketball-remix/raw.mp4",
-    "maskedVideo": "assets/internet/basketball-remix/masked.mp4",
-    "poster": "assets/internet/basketball-remix/poster.jpg",
-    "traceUrl": "assets/internet/basketball-remix/trace.txt",
-    "mediaAspect": "portrait",
-    "duration": 24.666666666666668,
-    "sourceDuration": 24.633313,
     "sourceInterval": [
       0,
-      24.6
+      14.9
     ],
     "intervalKind": "action",
     "mediaKind": "recorded-model-run",
-    "mediaNote": "Real checkpoint output on the complete 24.6 s remix. Original and mask views share a 15 fps replay clock. Source watermark retained; no manually supplied boxes or masks.",
-    "target": "defender",
+    "mediaNote": "Real checkpoint output on the first 15 seconds of the source video. Original and mask views share a 15 fps clock. Source watermark retained; no manually supplied target boxes or masks.",
+    "target": "ticket_inspector",
     "notPresent": false,
-    "resultNote": "Challenge case: the predicted action interval covers the full clip. The trace misdescribes the 13.1 s anchor as a jump, and mask propagation follows unrelated people in the inserted tutorial shots. These errors are retained; this is a qualitative example, not a benchmark score.",
+    "resultNote": "The model selects ticket_inspector and predicts 0.0–14.9 s, covering almost the full excerpt. The target is missed in the 5.9 s close-up; all original outputs are retained. This qualitative example has no annotated ground truth or benchmark score.",
     "steps": [
       {
-        "time": 3,
-        "label": "A hard cut",
-        "text": "The propagated mask switches to a person in a tutorial insert — an identity error.",
-        "thumbnail": "assets/internet/basketball-remix/step-1.webp"
+        "time": 3.933333333333333,
+        "label": "Checking the ticket",
+        "text": "The wide shot shows the selected person beside the visitors. The orange overlay is the actual propagated mask.",
+        "thumbnail": "assets/internet/cinema-ticket-prank/step-1.webp"
       },
       {
-        "time": 13.066666666666666,
+        "time": 7.933333333333334,
+        "label": "Pointing the way",
+        "text": "The model trace describes a gesture toward the counter. Replay the source to inspect the interaction.",
+        "thumbnail": "assets/internet/cinema-ticket-prank/step-2.webp"
+      },
+      {
+        "time": 14.933333333333334,
         "label": "Selected anchor",
-        "text": "The answer selects defender at 13.1 s. This sampled frame shows the defender, but does not support the trace’s claim that he is jumping.",
-        "thumbnail": "assets/internet/basketball-remix/step-2.webp"
-      },
-      {
-        "time": 22.933333333333334,
-        "label": "Back on court",
-        "text": "The late shot-fake sequence includes the defender jumping; the actual propagated mask is shown here.",
-        "thumbnail": "assets/internet/basketball-remix/step-3.webp"
+        "text": "The answer selects ticket_inspector at 14.9 s. This box is the prompt used for SAM3 mask propagation.",
+        "thumbnail": "assets/internet/cinema-ticket-prank/step-3.webp"
       }
     ]
   }

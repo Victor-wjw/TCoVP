@@ -1,0 +1,98 @@
+{
+  "case_id": "cinema-ticket-prank",
+  "run_date": "2026-10-19",
+  "source": {
+    "source_url": "https://www.bilibili.com/video/BV1bMJX6jEvP/",
+    "source_title": "假装电影院检票员看路人的票",
+    "creator": "dy远山的远",
+    "published_date": "20261016",
+    "source_clip_seconds": [
+      0,
+      15
+    ]
+  },
+  "source_platform_no_reprint_flag": true,
+  "query": "Who looks at a visitor's ticket and then directs the visitor to the person behind the counter?",
+  "model": "TCoVP · Qwen3-VL-4B + SAM3",
+  "reasoning_frames": 16,
+  "input_frame_count": 225,
+  "fps": 15,
+  "replay_duration_seconds": 15,
+  "input_sha256": "17a1b66f1ea0e3096fc999fd172c008eb80cbd43b6ccc27448790602e2dd2a67",
+  "trace_sha256": "a0a1b3eda387385983683cf3ad1bc8b3ad914a9f6a848f76699840a908fb657f",
+  "settings": {
+    "prompt_type": "action",
+    "do_sample": false,
+    "max_new_tokens": 2048,
+    "box_coordinate_convention": "Qwen3 0–1000; parser normalizes to 0–1",
+    "mask_time_scope": "predicted",
+    "propagation_direction": "both"
+  },
+  "selected": {
+    "status": "valid_target_primitives",
+    "selected_targets": [
+      "ticket_inspector"
+    ],
+    "selected_primitives": [
+      {
+        "obj_name": "ticket_inspector",
+        "time_span": "0.0 - 14.9",
+        "time_start": 0.0,
+        "time_end": 14.9,
+        "start_frame_idx": 0,
+        "end_frame_idx": 224,
+        "timestamp": 14.9,
+        "frame_idx": 224,
+        "box_xyxy": [
+          0.12,
+          0.22,
+          0.46,
+          0.79
+        ],
+        "box_xywh": [
+          0.12,
+          0.22,
+          0.34,
+          0.5700000000000001
+        ],
+        "box_pixels": [
+          43,
+          141,
+          166,
+          506
+        ]
+      }
+    ],
+    "ground_truth_supplied": false,
+    "manual_boxes_supplied": false
+  },
+  "sampled_frame_indices": [
+    0,
+    14,
+    29,
+    44,
+    59,
+    74,
+    89,
+    104,
+    119,
+    134,
+    149,
+    164,
+    179,
+    194,
+    209,
+    224
+  ],
+  "anchor_frame_indices": [
+    224
+  ],
+  "predicted_time_spans": [
+    [
+      0.0,
+      14.9
+    ]
+  ],
+  "manual_boxes_or_masks": false,
+  "quality_note": "Qualitative example, not a benchmark. The action interval spans nearly the entire 15-second excerpt. The 5.9-second close-up has a missing mask; empty-mask frames 81–95 and 163–177 are retained. No annotated ground truth or measured accuracy is available."
+}
