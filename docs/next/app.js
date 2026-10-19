@@ -405,7 +405,7 @@
     else renderSampleList();
   });
   sampleFilters.forEach(bindSampleFilter);
-  fetch('samples-data.json').then(response => {
+  fetch('samples-data.json?v=20261019-cinema', { cache: 'no-cache' }).then(response => {
     if (!response.ok) throw new Error('Unable to load recorded samples');
     return response.json();
   }).then(data => {
