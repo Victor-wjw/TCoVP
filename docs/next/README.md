@@ -26,11 +26,13 @@ No build step, framework, analytics, or third-party runtime is required. The pag
 
 The visual direction is inspired by the [Xiaomi-Lens-0 project page](https://seerray-lab.github.io/Xiaomi-Lens-0/): rounded typography, warm colors, outlined panels, and motion. The implementation and TCoVP-specific presentation are independent.
 
-## Internet examples
+## Reasoning examples
 
-The 2026-10-19 runs use the existing trained TCoVP Qwen3-VL-4B checkpoint with 16 uniformly sampled reasoning frames, the original action prompt and parser, greedy decoding, and SAM3 box-prompt propagation. Dense frames and exported videos use 15 fps. No manual target box, mask, or expected answer is supplied. Raw and masked views have identical frame counts and clocks. The text shown under **Model trace** is the unedited generated response; explanatory cards and result notes are editorial observations.
+The Samples explorer displays the `<think>` body in its original order as numbered observation cards. Entity IDs, temporal supports, boxes, and timestamps are formatted as distinct tokens without rewriting their values or prose. Clicking a timestamp seeks to the mapped video frame; playback highlights the corresponding observation. The `<answer>` is shown separately. The source text remains available in an expandable view and as a download.
 
-Internet-video examples are being reselected. The page currently retains the three original recorded demonstrations.
+New GroundMoRe cases include the exact dataset question, checkpoint output generated on 2026-10-19, raw and masked replays on an identical 6 fps clock, and per-case provenance. Both use 16 uniformly sampled reasoning frames, greedy decoding and the original action prompt/parser, followed by SAM3 with predicted temporal scope and no additional anchor window. The selected targets are coaching_staff (celebration) and girl (lemons). Both predicted intervals cover nearly the whole clip, which remains an action-boundary limitation and is stated in the visible result notes. They are qualitative examples and do not add benchmark scores. Video and mask canvases are preserved; no manual target boxes, mask correction, or replacement of model text is used. The official sources are the [GroundMoRe project](https://groundmore.github.io/) and its [test annotations](https://huggingface.co/datasets/groundmore/GroundMoRe/blob/main/test_v2.json).
+
+The three original recorded-demo examples include verified visual transcriptions of the recorded reasoning and answer panels. Their `<think>` wrappers are added for display, with provenance disclosed. Their timestamps refer to the original scene and do not seek the cropped replay, whose clock differs. The store transcript contains only complete visible observations through scene second39.0; the source recording cuts off the final sentence, which is omitted. The full verified answer is preserved. These transcripts are not recovered raw inference files or new runs.
 
 ## Files
 

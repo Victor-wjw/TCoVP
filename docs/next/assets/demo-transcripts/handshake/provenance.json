@@ -1,0 +1,27 @@
+{
+  "sourceType": "demo_recording_transcription",
+  "sourceVideo": "docs/assets/video_demo_with_cover.mp4",
+  "sourceVideoSha256": "bef18a628e7a5cd3cb8f3f9ad0f9615efb774b6aab0af8b9f694960776413d87",
+  "transcriptionMethod": "Visual transcription of the Grounded Reasoning Trace and Grounded Answer panels in the supplied demo recording.",
+  "traceSeekEnabled": false,
+  "timestampNote": "Timestamps inside the trace refer to the original scene, not the replay position in the demo recording or the cropped webpage sample.",
+  "provenanceNote": "This is a transcription of visible recorded UI text, not a recovered raw inference file and not a new inference run.",
+  "formattingNote": "Visual line wrapping is normalized into one paragraph. A <think> wrapper is added for display; it is not visible around the recorded trace. The existing <answer> wrapper is preserved from the recorded answer.",
+  "sampleId": "handshake",
+  "verificationStatus": "verified_visible_transcription",
+  "traceComplete": true,
+  "answerComplete": true,
+  "sourceRecordingSeconds": [
+    20
+  ],
+  "wrappers": {
+    "think": "added_for_display",
+    "answer": "preserved_from_recorded_ui"
+  },
+  "sourceCropXYWH": [
+    1535,
+    275,
+    785,
+    885
+  ]
+}

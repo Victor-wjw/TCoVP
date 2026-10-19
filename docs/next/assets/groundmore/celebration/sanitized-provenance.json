@@ -1,0 +1,60 @@
+{
+  "id": "celebration",
+  "dataset": "GroundMoRe",
+  "split": "test_v2",
+  "video_id": "co3pn3eL5-Y_0244_0254",
+  "expression_id": "13",
+  "query": "Who might not congratulate the boy in the green shirt if the boy in the green shirt had not scored a point?",
+  "model": "Qwen3-VL-4B TCoVP",
+  "checkpoint": "rl_13k_qwen3_vl_4b_full_stable/checkpoint-3144",
+  "source": "https://huggingface.co/datasets/groundmore/GroundMoRe",
+  "source_metadata": "https://huggingface.co/datasets/groundmore/GroundMoRe/blob/main/test_v2.json",
+  "run_kind": "Native-frame-rate showcase inference, original query with no supplied boxes or expected answer",
+  "frames": 60,
+  "replay_fps": 6.0,
+  "model_fps": 6.0,
+  "trace_time_scale": 1.0,
+  "duration": 10.0,
+  "predicted_time_spans_model_clock": [
+    [
+      0.0,
+      9.8
+    ]
+  ],
+  "predicted_time_spans_replay_clock": [
+    [
+      0.0,
+      9.8
+    ]
+  ],
+  "anchor_frame_indices": [
+    47
+  ],
+  "anchor_times_replay_clock": [
+    7.833333333333333
+  ],
+  "mask_nonempty_range_frames": [
+    8,
+    59
+  ],
+  "mask_nonempty_frames": 28,
+  "mask_time_scope": "predicted",
+  "extra_anchor_window": null,
+  "target": "coaching_staff",
+  "mask_scope_note": "Native 6fps model support with SAM3 predicted time scope; no extra anchor window is applied.",
+  "mask_source": "Original SAM3 output, no mask edits",
+  "trace_source": "Original VLM generated text, unchanged",
+  "step_frames": [
+    0,
+    30,
+    47
+  ],
+  "step_times": [
+    0.0,
+    5.0,
+    7.833333333333333
+  ],
+  "poster_frame": 47,
+  "raw_sha256": "dfda036358543eb0bef33cb34dbf253b11e4a77ca217ddcc87103f66f05143bf",
+  "masked_sha256": "4c676f796155bfd2cf18f6a1adcb6f00c2342a3839c089e748a316444d3da3de"
+}

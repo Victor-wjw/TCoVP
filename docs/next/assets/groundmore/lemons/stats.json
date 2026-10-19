@@ -1,0 +1,25 @@
+{
+  "frames": 90,
+  "fps": 6,
+  "duration": 15.0,
+  "nonempty_masks": 90,
+  "nonempty_range_frames": [
+    0,
+    89
+  ],
+  "no_mask_edits": true,
+  "raw": {
+    "width": 854,
+    "height": 480,
+    "r_frame_rate": "6/1",
+    "duration": "15.000000",
+    "nb_frames": "90"
+  },
+  "masked": {
+    "width": 854,
+    "height": 480,
+    "r_frame_rate": "6/1",
+    "duration": "15.000000",
+    "nb_frames": "90"
+  }
+}

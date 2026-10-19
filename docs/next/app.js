@@ -177,11 +177,17 @@
     const raw = httpUrl(sample?.rawVideo), masked = httpUrl(sample?.maskedVideo);
     return raw && masked && raw !== masked ? { raw, masked } : null;
   };
+  const reasoningPanel = byId('sample-reasoning');
+  const reasoningReading = byId('sample-reasoning-reading');
+  const reasoningChain = byId('sample-reasoning-chain');
   const traceDetails = byId('sample-trace');
   const traceContent = byId('sample-trace-content');
   const traceStatus = byId('sample-trace-status');
   const traceDownload = byId('sample-trace-download');
-  const traceState = { url: null, generation: 0, loaded: false, controller: null };
+  const traceAnswer = byId('sample-trace-answer');
+  const traceAnswerContent = byId('sample-trace-answer-content');
+  const reasoningFollow = byId('sample-reasoning-follow');
+  const traceState = { url: null, generation: 0, loaded: false, controller: null, observations: [], timestamps: [], follow: true, activeKey: null, activeObservation: null };
   const sameSiteTraceUrl = value => {
     const resolved = httpUrl(value);
     if (!resolved) return null;
@@ -189,54 +195,196 @@
     return url.origin === new URL(document.baseURI).origin && !url.username && !url.password && /\.txt$/i.test(url.pathname)
       ? url.href : null;
   };
-  const resetSampleTrace = sample => {
-    traceState.controller?.abort();
-    traceState.controller = null;
-    traceState.generation += 1;
-    traceState.url = sameSiteTraceUrl(sample.traceUrl);
-    traceState.loaded = false;
-    traceDetails.open = false;
-    traceDetails.hidden = !traceState.url;
-    traceDetails.removeAttribute('aria-busy');
-    traceContent.textContent = '';
-    traceContent.hidden = true;
-    traceStatus.replaceChildren();
-    traceStatus.hidden = true;
-    if (traceState.url) traceDownload.href = traceState.url;
-    else traceDownload.removeAttribute('href');
+  // Token contents are always inserted as text. The trace is data, never HTML.
+  // The model clock maps to the replay as: timestamp * scale - offset. Values
+  // shown inside primitive tokens always remain exactly as saved in the trace.
+  const traceReplayTime = value => {
+    const sourceTime = Number(String(value).trim());
+    const candidateScale = Number(selectedSample?.traceTimeScale);
+    const scale = Number.isFinite(candidateScale) && candidateScale > 0 ? candidateScale : 1;
+    const offset = Number(selectedSample?.traceTimeOffset) || 0;
+    return Number.isFinite(sourceTime) ? sourceTime * scale - offset : null;
   };
-  traceDetails.addEventListener('toggle', async () => {
-    if (!traceDetails.open || !traceState.url || traceState.loaded || traceState.controller) return;
+  const renderTraceTokens = (container, value, timestamps = []) => {
+    const tokens = /<(obj|time|box|t)>([\s\S]*?)<\/\1>/gi;
+    let position = 0;
+    for (const match of value.matchAll(tokens)) {
+      container.append(document.createTextNode(value.slice(position, match.index)));
+      const kind = match[1].toLowerCase();
+      const content = match[2];
+      const replayTime = kind === 't' ? traceReplayTime(content) : null;
+      const seekEnabled = selectedSample?.traceSeekEnabled !== false;
+      const token = make(kind === 't' && replayTime !== null && seekEnabled ? 'button' : 'span', `trace-token trace-token-${kind}${kind === 't' && !seekEnabled ? ' is-static' : ''}`);
+      token.append(make('span', 'trace-token-label', kind.toUpperCase()), make('span', 'trace-token-value', content));
+      if (token.tagName === 'BUTTON') {
+        token.type = 'button';
+        const duration = Number(selectedSample?.duration);
+        const inClip = replayTime >= 0 && (!Number.isFinite(duration) || replayTime <= duration + .1);
+        token.disabled = !inClip;
+        token.title = inClip ? `Inspect model timestamp ${content.trim()} s · replay ${Math.max(0, replayTime).toFixed(1)} s` : 'This model timestamp is outside the displayed excerpt';
+        token.setAttribute('aria-label', token.title);
+        if (inClip) {
+          timestamps.push(replayTime);
+          token.dataset.traceTime = String(replayTime);
+          token.addEventListener('click', () => { seekSample(replayTime); updateTracePlayhead(); });
+        }
+      }
+      container.append(token);
+      position = match.index + match[0].length;
+    }
+    container.append(document.createTextNode(value.slice(position)));
+  };
+  const followTraceObservation = observation => {
+    if (!observation || reasoningPanel.hidden) return;
+    // Only scroll an internal reader. scrollIntoView would also move the page.
+    const scroller = [reasoningReading, byId('sample-reasoning-body')].find(node => node.scrollHeight > node.clientHeight + 1);
+    if (!scroller) return;
+    const view = scroller.getBoundingClientRect();
+    const card = observation.getBoundingClientRect();
+    const top = view.top + scroller.clientTop;
+    const bottom = top + scroller.clientHeight;
+    let adjustment = 0;
+    if (card.top < top + 8) adjustment = card.top - top - 8;
+    else if (card.bottom > bottom - 8) adjustment = card.height > scroller.clientHeight - 16 ? card.top - top - 8 : card.bottom - bottom + 8;
+    const nextTop = Math.min(scroller.scrollHeight - scroller.clientHeight, Math.max(0, scroller.scrollTop + adjustment));
+    if (Math.abs(nextTop - scroller.scrollTop) > 1) scroller.scrollTo({ top: nextTop, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+  };
+  reasoningFollow.addEventListener('click', () => {
+    traceState.follow = !traceState.follow;
+    reasoningFollow.setAttribute('aria-pressed', String(traceState.follow));
+    if (traceState.follow) followTraceObservation(traceState.activeObservation);
+    else [reasoningReading, byId('sample-reasoning-body')].forEach(node => node.scrollTo({ top: node.scrollTop, behavior: 'auto' }));
+  });
+  const updateTracePlayhead = () => {
+    if (!traceState.timestamps.length) return;
+    const currentTime = sampleVideo.currentTime;
+    const visited = traceState.timestamps.filter(time => time <= currentTime + .15);
+    const activeTime = visited.length ? Math.max(...visited) : null;
+    const active = [];
+    traceState.observations.forEach((observation, index) => {
+      const current = activeTime !== null && observation.times.some(time => Math.abs(time - activeTime) < .001);
+      observation.node.classList.toggle('is-active', current);
+      if (current) { observation.node.setAttribute('aria-current', 'step'); active.push(index); }
+      else observation.node.removeAttribute('aria-current');
+    });
+    reasoningPanel.querySelectorAll('[data-trace-time]').forEach(button => {
+      button.classList.toggle('is-current', activeTime !== null && Math.abs(Number(button.dataset.traceTime) - activeTime) < .001);
+    });
+    const activeKey = active.join(',');
+    if (activeKey !== traceState.activeKey) {
+      traceState.activeKey = activeKey;
+      traceState.activeObservation = active.length ? traceState.observations[active[0]].node : null;
+      if (traceState.follow) followTraceObservation(traceState.activeObservation);
+    }
+  };
+  const renderSampleTrace = raw => {
+    traceContent.textContent = raw;
+    traceContent.hidden = raw.length === 0;
+    const thought = /<think>([\s\S]*?)<\/think>/i.exec(raw)?.[1]?.trim();
+    const answer = /<answer>([\s\S]*?)<\/answer>/i.exec(raw)?.[1]?.trim();
+    if (thought) {
+      // Sentence/paragraph breaks only change the reading layout. Every sentence
+      // retains the model's original wording, primitive values, and order.
+      const observations = thought.split(/\n\s*\n|(?<=[.!?])\s+(?=[A-Z<])/).map(part => part.trim()).filter(Boolean);
+      observations.forEach((observation, index) => {
+        const item = make('li', 'reasoning-observation');
+        const marker = make('span', 'reasoning-number mono', String(index + 1).padStart(2, '0'));
+        marker.setAttribute('aria-hidden', 'true');
+        const text = make('p', 'reasoning-observation-text');
+        const times = [];
+        renderTraceTokens(text, observation, times);
+        item.append(marker, text);
+        reasoningChain.append(item);
+        traceState.observations.push({ node: item, times });
+        traceState.timestamps.push(...times);
+      });
+      reasoningReading.hidden = false;
+      traceStatus.hidden = true;
+    } else {
+      traceStatus.textContent = raw.trim() ? 'This saved output has no <think> section. Inspect its original trace below.' : 'This trace file is empty.';
+      traceStatus.hidden = false;
+    }
+    if (answer) {
+      renderTraceTokens(traceAnswerContent, answer);
+      traceAnswer.hidden = false;
+    }
+    updateTracePlayhead();
+  };
+  const loadSampleTrace = async () => {
+    if (!traceState.url || traceState.loaded || traceState.controller) return;
     const url = traceState.url;
     const generation = traceState.generation;
     const controller = new AbortController();
     traceState.controller = controller;
-    traceDetails.setAttribute('aria-busy', 'true');
-    traceStatus.textContent = 'Loading original model trace…';
+    reasoningPanel.setAttribute('aria-busy', 'true');
+    traceStatus.textContent = 'Loading the saved reasoning chain…';
     traceStatus.hidden = false;
     try {
       const response = await fetch(url, { signal: controller.signal, redirect: 'error' });
       if (!response.ok) throw new Error('Unable to load the model trace');
-      const text = await response.text();
+      const raw = await response.text();
       if (generation !== traceState.generation || url !== traceState.url) return;
-      traceContent.textContent = text;
-      traceContent.hidden = text.length === 0;
-      traceStatus.textContent = text.length ? '' : 'This trace file is empty.';
-      traceStatus.hidden = text.length > 0;
+      renderSampleTrace(raw);
       traceState.loaded = true;
     } catch (error) {
       if (generation !== traceState.generation || controller.signal.aborted) return;
-      traceStatus.replaceChildren(document.createTextNode('The trace could not be loaded. '));
+      traceStatus.replaceChildren(document.createTextNode('The saved reasoning chain could not be loaded. '));
       const link = make('a', '', 'Open original trace ↗');
       link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
       traceStatus.append(link);
     } finally {
       if (generation === traceState.generation && traceState.controller === controller) {
         traceState.controller = null;
-        traceDetails.removeAttribute('aria-busy');
+        reasoningPanel.removeAttribute('aria-busy');
       }
     }
-  });
+  };
+  const resetSampleTrace = sample => {
+    traceState.controller?.abort();
+    traceState.controller = null;
+    traceState.generation += 1;
+    traceState.url = sameSiteTraceUrl(sample.traceUrl);
+    traceState.loaded = false;
+    traceState.observations = [];
+    traceState.timestamps = [];
+    traceState.follow = true;
+    traceState.activeKey = null;
+    traceState.activeObservation = null;
+    reasoningFollow.setAttribute('aria-pressed', 'true');
+    reasoningFollow.hidden = sample.traceSeekEnabled === false;
+    traceDetails.open = false;
+    reasoningPanel.hidden = !traceState.url;
+    byId('sample-player').classList.toggle('has-reasoning', Boolean(traceState.url));
+    reasoningPanel.removeAttribute('aria-busy');
+    byId('sample-reasoning-body').scrollTop = 0;
+    reasoningChain.replaceChildren();
+    reasoningReading.hidden = true;
+    reasoningReading.scrollTop = 0;
+    traceAnswer.hidden = true;
+    traceAnswerContent.replaceChildren();
+    traceContent.textContent = '';
+    traceContent.hidden = true;
+    traceStatus.replaceChildren();
+    traceStatus.hidden = true;
+    const offset = Number(sample.traceTimeOffset) || 0;
+    const scale = Number(sample.traceTimeScale) || 1;
+    const provenance = typeof sample.traceProvenance === 'string' ? sample.traceProvenance.trim() : '';
+    const seekEnabled = sample.traceSeekEnabled !== false;
+    const instruction = seekEnabled ? 'Select a timestamp to inspect its visual evidence.' : 'Timestamps refer to the original scene; they do not seek this recorded demo.';
+    byId('sample-reasoning-intro').textContent = `${provenance || 'Read the model’s own words in order.'} ${instruction}`;
+    byId('sample-reasoning-origin').textContent = typeof sample.traceSourceLabel === 'string' && sample.traceSourceLabel.trim() ? sample.traceSourceLabel : 'MODEL OUTPUT · ORIGINAL ORDER';
+    const clockNote = typeof sample.traceClockNote === 'string' ? sample.traceClockNote.trim() : '';
+    const note = clockNote || (seekEnabled && (scale !== 1 || offset) ? `Model timestamps are preserved. Replay time = model time × ${scale}${offset ? ` − ${offset.toFixed(1)} s` : ''}.` : '');
+    byId('sample-reasoning-clock-note').textContent = note;
+    byId('sample-reasoning-clock-note').hidden = !note;
+    const rawLabel = typeof sample.traceRawLabel === 'string' && sample.traceRawLabel.trim() ? sample.traceRawLabel : 'Original trace';
+    byId('sample-trace-raw-label').textContent = rawLabel;
+    traceContent.setAttribute('aria-label', rawLabel);
+    traceDownload.textContent = typeof sample.traceDownloadLabel === 'string' && sample.traceDownloadLabel.trim() ? sample.traceDownloadLabel : 'Download original .txt ↗';
+    if (traceState.url) traceDownload.href = traceState.url;
+    else traceDownload.removeAttribute('href');
+    if (traceState.url) loadSampleTrace();
+  };
   const sampleSteps = sample => Array.isArray(sample?.steps) ? sample.steps : [];
   const safePlay = () => { const promise = sampleVideo.play(); if (promise) promise.catch(() => {}); };
   const seekSample = time => {
@@ -375,6 +523,7 @@
   };
   sampleVideo.addEventListener('timeupdate', () => {
     if (!selectedSample) return;
+    updateTracePlayhead();
     let current = 0;
     sampleSteps(selectedSample).forEach((step, index) => { if (sampleVideo.currentTime >= step.time - .15) current = index; });
     byId('evidence-steps').querySelectorAll('[data-step]').forEach((step, index) => {
@@ -405,21 +554,22 @@
     else renderSampleList();
   });
   sampleFilters.forEach(bindSampleFilter);
-  fetch('samples-data.json?v=20261019-cinema', { cache: 'no-cache' }).then(response => {
+  fetch('samples-data.json?v=20261019-reasoning', { cache: 'no-cache' }).then(response => {
     if (!response.ok) throw new Error('Unable to load recorded samples');
     return response.json();
   }).then(data => {
     if (!Array.isArray(data) || !data.length) throw new Error('No recorded samples');
     samples = data;
-    if (samples.some(sample => sample.category === 'internet')) {
-      const filter = make('button', '', 'Internet antics');
+    [['reasoning', 'GroundMoRe'], ['internet', 'Internet antics']].forEach(([category, label]) => {
+      if (!samples.some(sample => sample.category === category)) return;
+      const filter = make('button', '', label);
       filter.type = 'button';
-      filter.dataset.sampleFilter = 'internet';
+      filter.dataset.sampleFilter = category;
       filter.setAttribute('aria-pressed', 'false');
       sampleFilters[0].parentElement.append(filter);
       sampleFilters.push(filter);
       bindSampleFilter(filter);
-    }
+    });
     selectSample(samples[0]);
   }).catch(() => {
     sampleList.append(make('p', 'sample-load-error', 'Examples could not be loaded. Watch the full recorded demonstration above.'));

@@ -11,8 +11,8 @@
   <title>TCoVP — Think Visually Across Space and Time</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js?v=20261019-cinema" defer></script>
+  <link rel="stylesheet" href="style.css?v=20261019-reasoning">
+  <script src="app.js?v=20261019-reasoning" defer></script>
   <script src="results.js" defer></script>
 </head>
 <body>
@@ -81,9 +81,19 @@
             <div class="sample-intro"><div><h3 id="sample-title">Trace the handshake before the hug</h3><p id="sample-query">Who clasps hands with the athlete with dyed hair before hugging the athlete with dyed hair?</p></div><button class="pill small" id="sample-replay">Replay <span aria-hidden="true">↻</span></button></div>
             <div class="sample-meta" id="sample-meta" hidden></div>
             <div class="sample-view-controls segmented" id="sample-view-controls" role="group" aria-label="Video view" hidden><button type="button" data-sample-view="raw" aria-pressed="false">Original</button><button type="button" data-sample-view="masked" aria-pressed="true">TCoVP mask</button></div>
-            <details class="sample-trace" id="sample-trace" hidden><summary>Model trace</summary><div class="sample-trace-tools"><span>Original model output</span><a id="sample-trace-download" download>Download original .txt ↗</a></div><p id="sample-trace-status" role="status" aria-live="polite" hidden></p><pre id="sample-trace-content" tabindex="0" aria-label="Original model trace" hidden></pre></details>
             <div class="sample-stage"><video id="sample-video" controls playsinline preload="metadata" aria-label="Selected recorded example"></video><div class="sample-empty" hidden><span>∅</span><p>No matching target.<br><strong>An empty mask is an answer, too.</strong></p></div></div>
             <div class="sample-caption"><span class="live-dot" aria-hidden="true"></span><p id="sample-caption">Replay of a recorded example; no live model inference.</p></div>
+            <section class="sample-reasoning" id="sample-reasoning" aria-labelledby="sample-reasoning-title" hidden>
+              <div class="reasoning-heading"><div><span class="reasoning-code mono">&lt;think&gt;</span><h4 id="sample-reasoning-title">Reasoning chain</h4></div><button class="reasoning-follow" id="sample-reasoning-follow" type="button" aria-pressed="true" title="Keep the current observation visible"><span aria-hidden="true"></span>Follow video</button><span class="mono" id="sample-reasoning-origin">MODEL OUTPUT · ORIGINAL ORDER</span></div>
+              <p class="reasoning-intro" id="sample-reasoning-intro">Read the model’s own words in order. Select a timestamp to inspect its visual evidence.</p>
+              <p class="reasoning-clock-note" id="sample-reasoning-clock-note" hidden></p>
+              <div class="reasoning-body" id="sample-reasoning-body" tabindex="0" role="region" aria-label="Read the model reasoning and answer">
+              <p class="reasoning-status" id="sample-trace-status" role="status" aria-live="polite" hidden></p>
+              <div class="reasoning-reading" id="sample-reasoning-reading" tabindex="0" role="region" aria-label="Model reasoning in original order" hidden><ol class="reasoning-chain" id="sample-reasoning-chain"></ol></div>
+              <div class="reasoning-answer" id="sample-trace-answer" hidden><span class="mono">&lt;answer&gt;</span><h5>Selected target primitives</h5><p id="sample-trace-answer-content"></p></div>
+              <details class="sample-trace" id="sample-trace"><summary><span id="sample-trace-raw-label">Original trace</span><span aria-hidden="true">↗</span></summary><div class="sample-trace-tools"><span>Saved text, including its primitive tokens.</span><a id="sample-trace-download" download>Download original .txt ↗</a></div><pre id="sample-trace-content" tabindex="0" aria-label="Original model trace" hidden></pre></details>
+              </div>
+            </section>
             <div class="evidence-panel"><div class="evidence-heading"><h4>Read the visual evidence</h4><span class="mono" id="evidence-source">PAPER + RECORDED DEMO</span></div><div id="evidence-steps" class="evidence-steps"></div></div>
             <div class="sample-conclusion" id="sample-conclusion"></div>
           </article>
