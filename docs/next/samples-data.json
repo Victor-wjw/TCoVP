@@ -1,0 +1,185 @@
+[
+  {
+    "id": "handshake",
+    "title": "Trace the handshake before the hug",
+    "category": "temporal",
+    "dataset": "GroundMoRe",
+    "model": "TCoVP · recorded project demo",
+    "query": "Who clasps hands with the athlete with dyed hair before hugging the athlete with dyed hair?",
+    "summary": "Resolve the coach through an ordered interaction with the same athlete.",
+    "video": "assets/demo-handshake.mp4",
+    "poster": "assets/demo-handshake-poster.webp",
+    "duration": 20,
+    "interval": null,
+    "sourceDuration": 12,
+    "sourceInterval": [
+      2.3,
+      4.7
+    ],
+    "sourceTimeBasis": "Original scene seconds, transcribed from the recorded demo.",
+    "mediaKind": "recorded-demo-excerpt",
+    "mediaNote": "A crop of the recorded demo viewport. Existing boxes and masks are part of the source recording. The replay clock is separate from original scene seconds.",
+    "rawVideo": null,
+    "maskedVideo": null,
+    "recording": {
+      "source": "../assets/video_demo_with_cover.mp4",
+      "start": 10,
+      "end": 30,
+      "crop": [
+        476,
+        342,
+        1032,
+        580
+      ]
+    },
+    "target": "coach",
+    "notPresent": false,
+    "primitives": [
+      "OBJ · coach",
+      "TIME · 2.3–4.7 s",
+      "BOX · anchor at 2.3 s",
+      "MASK · coach"
+    ],
+    "steps": [
+      {
+        "time": 0,
+        "label": "Who",
+        "text": "Keep the coach and the athlete with dyed hair as distinct entities.",
+        "thumbnail": "assets/demo-handshake-step-1.webp"
+      },
+      {
+        "time": 10,
+        "label": "When",
+        "text": "The recorded output places the target interaction at 2.3–4.7 s in the original scene.",
+        "thumbnail": "assets/demo-handshake-step-2.webp"
+      },
+      {
+        "time": 19.5,
+        "label": "Target",
+        "text": "The selected primitive identifies the coach; the recorded replay shows the propagated mask.",
+        "thumbnail": "assets/demo-handshake-step-3.webp"
+      }
+    ]
+  },
+  {
+    "id": "store",
+    "title": "Trace the store visit",
+    "category": "sequence",
+    "dataset": "Long-RVOS",
+    "model": "TCoVP · recorded project demo",
+    "query": "The man walks through the store, looks at surrounding goods, then approaches two service workers and talks to the woman beside him. Afterward, he walks to another worker, preparing to leave.",
+    "summary": "Follow one identity through a longer sequence involving several people.",
+    "video": "assets/demo-store.mp4",
+    "poster": "assets/demo-store-poster.webp",
+    "duration": 20,
+    "interval": null,
+    "sourceDuration": 65.3,
+    "sourceInterval": [
+      0,
+      65
+    ],
+    "sourceTimeBasis": "Original scene seconds, transcribed from the recorded demo.",
+    "mediaKind": "recorded-demo-excerpt",
+    "mediaNote": "A crop of the recorded demo viewport, which includes source playback speed changes. It is not a standalone raw or masked scene. The replay clock is separate from original scene seconds.",
+    "rawVideo": null,
+    "maskedVideo": null,
+    "recording": {
+      "source": "../assets/video_demo_with_cover.mp4",
+      "start": 48,
+      "end": 68,
+      "crop": [
+        476,
+        342,
+        1032,
+        580
+      ]
+    },
+    "target": "man_in_suit",
+    "notPresent": false,
+    "primitives": [
+      "OBJ · man_in_suit",
+      "TIME · 0.0–65.0 s",
+      "BOX · anchors across the visit",
+      "MASK · man_in_suit"
+    ],
+    "steps": [
+      {
+        "time": 0,
+        "label": "Identity",
+        "text": "The recorded output reuses man_in_suit while separately identifying the service workers.",
+        "thumbnail": "assets/demo-store-step-1.webp"
+      },
+      {
+        "time": 10,
+        "label": "Continuity",
+        "text": "The target remains the same person as the scene and interactions change.",
+        "thumbnail": "assets/demo-store-step-2.webp"
+      },
+      {
+        "time": 19.5,
+        "label": "Target",
+        "text": "The selected target primitive is linked to the visible mask in the recorded replay.",
+        "thumbnail": "assets/demo-store-step-3.webp"
+      }
+    ]
+  },
+  {
+    "id": "absence",
+    "title": "Verify the missing turtle",
+    "category": "absent",
+    "dataset": "ReVOS",
+    "model": "TCoVP · recorded project demo",
+    "query": "the turtle in the water",
+    "summary": "Inspect the aquarium and return an absence result for the requested turtle.",
+    "video": "assets/demo-absence.mp4",
+    "poster": "assets/demo-absence-poster.webp",
+    "duration": 17.4,
+    "interval": null,
+    "sourceDuration": 6,
+    "sourceInterval": null,
+    "sourceTimeBasis": "The recorded trace inspects original scene anchors from 0.0 to 5.7 s.",
+    "mediaKind": "recorded-demo-excerpt",
+    "mediaNote": "A crop of the recorded demo viewport. Boxes visible around fish belong to the source evidence trace; no turtle mask is present. The replay clock is separate from original scene seconds.",
+    "rawVideo": null,
+    "maskedVideo": null,
+    "recording": {
+      "source": "../assets/video_demo_with_cover.mp4",
+      "start": 94,
+      "end": 111.4,
+      "crop": [
+        476,
+        342,
+        1032,
+        580
+      ]
+    },
+    "target": null,
+    "notPresent": true,
+    "primitives": [
+      "OBJ · water and fish evidence",
+      "TIME · inspected scene anchors",
+      "ANSWER · Not present",
+      "MASK · no target mask"
+    ],
+    "steps": [
+      {
+        "time": 0,
+        "label": "Request",
+        "text": "The query asks for a turtle in the aquarium.",
+        "thumbnail": "assets/demo-absence-step-1.webp"
+      },
+      {
+        "time": 8.7,
+        "label": "Evidence",
+        "text": "The recorded trace anchors visible goldfish, a black fish, and water.",
+        "thumbnail": "assets/demo-absence-step-2.webp"
+      },
+      {
+        "time": 16.9,
+        "label": "Absence",
+        "text": "The recorded demo returns Not present and produces no turtle target mask.",
+        "thumbnail": "assets/demo-absence-step-3.webp"
+      }
+    ]
+  }
+]

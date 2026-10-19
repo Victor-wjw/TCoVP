@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <meta name="description" content="TCoVP: Think Visually Across Space and Time. Explore grounded reasoning, timestamped video primitives, and video segmentation through recorded examples.">
+  <meta property="og:title" content="TCoVP — Think Visually Across Space and Time">
+  <meta property="og:description" content="Grounded Reasoning for Video Segmentation. Which entity, when, and where — connected in one temporal chain.">
+  <meta property="og:type" content="website">
+  <title>TCoVP — Think Visually Across Space and Time</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+  <script src="results.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="#overview" aria-label="TCoVP home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>TCo<span>VP</span></a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+      <div class="nav-links" id="nav-links"><a href="#overview" aria-current="location">Overview</a><a href="#video">Video</a><a href="#samples">Explore</a><a href="#method">Method</a><a href="#data">Data</a><a href="#results">Results</a></div>
+      <a class="pill small nav-code" href="https://github.com/Victor-wjw/TCoVP" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="reading-progress" aria-hidden="true"></div>
+  </header>
+  <main id="main">
+    <section class="hero shell" id="overview">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> TEMPORAL CHAIN OF VIDEO PRIMITIVES</p>
+        <h1>Think visually.<br>Across <span class="word-space">space</span><br>and <span class="word-time">time.</span></h1>
+        <p class="hero-subtitle">Grounded Reasoning for Video Segmentation</p>
+        <p class="hero-description">Follow the right entity, through the right event. TCoVP connects <strong>who, when, and where</strong> in a visual reasoning chain — then turns its evidence into video masks.</p>
+        <div class="hero-actions"><a class="pill primary" href="#samples">Explore the evidence <span aria-hidden="true">↘</span></a><a class="pill" href="assets/TCoVP_arXiv.pdf" target="_blank" rel="noopener">Read the paper <span aria-hidden="true">↗</span></a></div>
+        <a class="text-link" href="#authors">Junwei Wen, Deshui Miao, et al. <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-art" aria-label="Animated illustration of a temporal video primitive chain">
+        <div class="art-orbit" aria-hidden="true"></div><span class="spark spark-one" aria-hidden="true">✳</span><span class="spark spark-two" aria-hidden="true">+</span>
+        <div class="hero-window">
+          <div class="window-top"><span><i></i><i></i><i></i></span><span>ONE QUESTION. CONNECTED EVIDENCE.</span><button id="hero-motion" class="icon-button" aria-label="Pause illustration" title="Pause illustration">Ⅱ</button></div>
+          <div class="hero-query"><span class="query-symbol" aria-hidden="true">“</span><p>Who clasps hands with the dyed-hair athlete<br><strong>before hugging</strong> them?</p></div>
+          <div class="hero-scene">
+            <video id="hero-scene-video" src="assets/demo-handshake.mp4" poster="assets/hero-01.webp" muted loop playsinline preload="metadata" aria-label="Recorded coach and athlete example; illustration of the Figure 1 chain"></video>
+
+            <span class="scene-label"><i></i> RECORDED SCENE · FIG. 1 CHAIN</span>
+            <div class="hero-step-badge"><span id="hero-step-number">01</span><span id="hero-step-label">Ground the entity</span></div>
+          </div>
+          <div class="chain-strip" aria-label="Chronological observations from Figure 1">
+            <div class="chain-node is-active" data-hero-node="0"><span>2.3 s</span><i></i><strong>Hand-clasp</strong></div><span class="chain-connector" aria-hidden="true"></span>
+            <div class="chain-node" data-hero-node="1"><span>3.0 s</span><i></i><strong>Interaction</strong></div><span class="chain-connector" aria-hidden="true"></span>
+            <div class="chain-node" data-hero-node="2"><span>4.7 s</span><i></i><strong>Embrace</strong></div>
+          </div>
+          <div class="hero-answer"><span class="tag">TARGET</span><strong>coach</strong><span class="answer-line" aria-hidden="true"></span><span>predicted interval <b>2.3–4.7 s</b></span></div>
+        </div>
+        <div class="art-caption">a question → a chain → a mask <span aria-hidden="true">↗</span></div>
+      </div>
+    </section>
+
+    <div class="shell stat-strip" aria-label="Paper at a glance">
+      <div><strong>55.37<span> J&amp;F</span></strong><b>GroundMoRe</b><small>TCoVP-M-4B · Molmo2-4B</small></div>
+      <div><strong>+23.25<span> pts</span></strong><b>Same-backbone comparison</b><small>TCoVP-4B 55.21 vs. VideoSEG-O3-4B 31.96 · Qwen3-VL-4B</small></div>
+      <div><strong>5<span> benchmarks</span></strong><b>Spatial + temporal reasoning</b><small>General and motion-grounded VRS</small></div>
+      <div><strong>3<span> backbones</span></strong><b>A transferable representation</b><small>Qwen2.5-VL · Qwen3-VL · Molmo2</small></div>
+    </div>
+
+    <section class="section shell" id="video">
+      <div class="section-heading"><div><p class="eyebrow">01 / SEE IT IN MOTION</p><h2>Watch the evidence<br>come together.</h2></div><p>Three recorded examples follow the complete path: a question, grounded reasoning, selected target primitives, and mask execution.</p></div>
+      <div class="overview-video framed"><div class="panel-bar"><span><i class="status-dot"></i> TCoVP / WALKTHROUGH</span><a href="../assets/video_demo_with_cover.mp4" download>Download video ↗</a></div><video id="overview-video" controls playsinline preload="metadata" poster="assets/demo-overview.webp" aria-label="TCoVP recorded demonstration"><source src="../assets/video_demo_with_cover.mp4" type="video/mp4">Your browser does not support embedded video. <a href="../assets/video_demo_with_cover.mp4">Download the demo.</a></video></div>
+    </section>
+
+    <section class="section tint-blue" id="samples">
+      <div class="shell">
+        <div class="section-heading"><div><p class="eyebrow">02 / FOLLOW THE EVIDENCE</p><h2>A video. A question.<br><span class="accent">The right target.</span></h2></div><p>Replay recorded examples and inspect the evidence behind each choice. Switch cases, follow the temporal chain, and see which primitives become masks.</p></div>
+        <div class="sample-toolbar"><div class="segmented" aria-label="Filter examples"><button class="is-active" data-sample-filter="all" aria-pressed="true">All examples</button><button data-sample-filter="temporal" aria-pressed="false">Event order</button><button data-sample-filter="sequence" aria-pressed="false">Long sequence</button><button data-sample-filter="absent" aria-pressed="false">No target</button></div><span class="mono sample-note">RECORDED OUTPUTS · INTERACTIVE REPLAY</span></div>
+        <div class="sample-explorer framed">
+          <div class="sample-list" id="sample-list" aria-label="Choose a recorded example"></div>
+          <article class="sample-player" id="sample-player" aria-labelledby="sample-title">
+            <div class="panel-bar"><span id="sample-dataset">GROUNDED VIDEO REASONING</span><span id="sample-index">01 / 03</span></div>
+            <div class="sample-intro"><div><h3 id="sample-title">Trace the handshake before the hug</h3><p id="sample-query">Who clasps hands with the athlete with dyed hair before hugging the athlete with dyed hair?</p></div><button class="pill small" id="sample-replay">Replay <span aria-hidden="true">↻</span></button></div>
+            <div class="sample-stage"><video id="sample-video" controls playsinline preload="metadata" aria-label="Selected recorded example"></video><div class="sample-empty" hidden><span>∅</span><p>No matching target.<br><strong>An empty mask is an answer, too.</strong></p></div></div>
+            <div class="sample-caption"><span class="live-dot" aria-hidden="true"></span><p id="sample-caption">Replay of a recorded example; no live model inference.</p></div>
+            <div class="evidence-panel"><div class="evidence-heading"><h4>Read the visual evidence</h4><span class="mono" id="evidence-source">PAPER + RECORDED DEMO</span></div><div id="evidence-steps" class="evidence-steps"></div></div>
+            <div class="sample-conclusion" id="sample-conclusion"></div>
+          </article>
+        </div>
+        <noscript><p>Interactive samples require JavaScript. The full recorded demonstration above and all paper figures below remain available.</p></noscript>
+        <div class="paper-examples"><a class="example-link" href="../assets/example-basketball.png" data-lightbox><div><span class="mono">FIG. 7 / OBJECT ≠ ACTOR</span><h3>Follow the basketball.</h3><p>Resolve the shot attempt, then select the ball.</p></div><img src="../assets/example-basketball.png" alt="Paper Figure 7: target basketball and predicted shot interval" loading="lazy"><span class="open-icon" aria-hidden="true">↗</span></a><a class="example-link" href="../assets/example-zero-target.png" data-lightbox><div><span class="mono">FIG. 8 / ZERO TARGET</span><h3>Recognize what is absent.</h3><p>A turtle query in a video containing only fish.</p></div><img src="../assets/example-zero-target.png" alt="Paper Figure 8: no turtle is present; TCoVP returns an empty target set" loading="lazy"><span class="open-icon" aria-hidden="true">↗</span></a></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="method">
+      <div class="section-heading"><div><p class="eyebrow">03 / THE IDEA</p><h2>Make every visual<br>reference explicit.</h2></div><p>Language connects the observations. Video primitives anchor them to an entity, a time, and a place. Selected primitives give SAM3 executable prompts for mask prediction.</p></div>
+      <div class="method-rail" aria-label="Three stages of the TCoVP method"><article><span class="step-number">01</span><div class="method-icon entity-icon" aria-hidden="true"><i></i><i></i><i></i></div><h3>Which entity?</h3><p>Ground target and context entities. Reuse their identifiers across observations.</p><span class="code-tag">&lt;obj&gt;coach&lt;/obj&gt;</span></article><span class="rail-arrow" aria-hidden="true">→</span><article><span class="step-number">02</span><div class="method-icon time-icon" aria-hidden="true"><i></i><i></i><i></i></div><h3>When does it happen?</h3><p>Predict appearance support, or the action interval for motion-grounded queries.</p><span class="code-tag">&lt;time&gt;2.3–4.7&lt;/time&gt;</span></article><span class="rail-arrow" aria-hidden="true">→</span><article><span class="step-number">03</span><div class="method-icon box-icon" aria-hidden="true"><i></i></div><h3>Where is the evidence?</h3><p>Select timestamped boxes, then propagate the target masks with SAM3.</p><span class="code-tag">&lt;box&gt;…&lt;/box&gt; at &lt;t&gt;2.3&lt;/t&gt;</span></article></div>
+      <div class="interval-lab framed"><div class="interval-copy"><p class="eyebrow">PRESENCE IS NOT THE ACTION INTERVAL</p><h3>The coach stays.<br>The handshake ends.</h3><p>Move through the timeline to inspect the interval predicted in Figure 1. The athlete is context; the coach is the selected target.</p><div class="time-readout"><span id="interval-time">3.0</span><small>seconds</small><b id="interval-state">Inside predicted action</b></div></div><div class="interval-controls"><div class="time-axis"><span>0 s</span><span>5.9 s</span><span>11.7 s</span></div><div class="interval-track"><span>Context / athlete</span><div class="track full"><i></i></div></div><div class="interval-track"><span>Target / coach</span><div class="track"><i class="predicted-range"></i></div><small>Predicted action: 2.3–4.7 s</small></div><label for="interval-scrubber" class="sr-only">Inspect the predicted action interval in seconds</label><input id="interval-scrubber" type="range" min="0" max="11.7" step="0.1" value="3"><p class="interval-footnote">Illustration of the paper’s prediction. Ground-truth action interval: 2.0–5.7 s.</p></div></div>
+      <figure class="paper-figure"><a class="figure-frame" href="../assets/reasoning.png" data-lightbox><img src="../assets/reasoning.png" alt="Figure 1: TCoVP grounds coach and athlete observations and identifies the hand-clasp interval before the hug" loading="lazy" width="2800" height="1391"><span class="expand-figure">Expand figure ↗</span></a><figcaption><strong>From reference to evidence.</strong> The chain separates the target coach from the contextual athlete and distinguishes the queried hand-clasp from the subsequent hug. Figure 1 from the paper.</figcaption></figure>
+      <details class="abstract-details"><summary>Read the abstract <span aria-hidden="true">+</span></summary><div class="abstract-body"><p>Video Reasoning Segmentation (VRS) requires a model to identify an implicitly described target and predict its pixel-level mask trajectory, while resolving the spatial relations and temporal events that determine the answer. Text-only Chain-of-Thought (CoT) can explain a target choice without making the underlying visual references explicit, leaving a <strong>video reference gap</strong> between linguistic inference and the evidence distributed across frames.</p><p>We introduce <strong>Temporal Chain of Video Primitives (TCoVP)</strong>, a spatiotemporally grounded form of Video CoT that organizes query-relevant observations into a chronological reasoning chain. Each primitive associates an entity reference with temporal support and timestamped spatial evidence, and the chain interleaves these references with language to guide reasoning about which entity is relevant, when the queried event holds, and where its evidence appears. The selected target primitives then provide box prompts and temporal support for video mask prediction.</p><p>We construct <strong>TCoVP-SFT-15k</strong> and <strong>TCoVP-RL-13k</strong> to learn this representation through supervised fine-tuning and chain-aligned reinforcement learning. Extensive experiments across five VRS benchmarks and three model backbones demonstrate the strong performance of TCoVP, highlighting the effectiveness of organizing spatial and temporal evidence within the reasoning process. All models and code will be publicly released.</p></div></details>
+    </section>
+
+    <section class="section tint-peach" id="data"><div class="shell"><div class="section-heading"><div><p class="eyebrow">04 / LEARNING THE CHAIN</p><h2>Learn to ground.<br>Then learn to align.</h2></div><p>Two corpora built from the training splits of ReVOS, MeViS, Long-RVOS, and GroundMoRe teach the representation and align reasoning with visual evidence.</p></div>
+      <div class="training-cards"><article class="training-card"><div class="training-top"><span class="tag">STAGE 01 · SFT</span><span aria-hidden="true">↗</span></div><h3>TCoVP-SFT-<span>15k</span></h3><p>Complete reasoning trajectories interleave language and timestamped video primitives.</p><div class="corpus-bar" aria-label="Approximate SFT composition: ReVOS 5.8k, MeViS 4.8k, Long-RVOS 2.6k, GroundMoRe 1.8k"><i style="--portion:38.67%;--color:var(--navy)"></i><i style="--portion:32%;--color:var(--orange)"></i><i style="--portion:17.33%;--color:var(--teal)"></i><i style="--portion:12%;--color:var(--violet)"></i></div><div class="corpus-legend"><span><i class="navy"></i>ReVOS 5.8k</span><span><i class="orange"></i>MeViS 4.8k</span><span><i class="teal"></i>Long-RVOS 2.6k</span><span><i class="violet"></i>GroundMoRe 1.8k</span></div></article><article class="training-card"><div class="training-top"><span class="tag">STAGE 02 · CHAIN-ALIGNED RL</span><span aria-hidden="true">↗</span></div><h3>TCoVP-RL-<span>13k</span></h3><p>Reward-compatible annotations align the temporal, spatial, and target-level evidence.</p><div class="reward-list"><span><i>01</i>Structural validity</span><span><i>02</i>Temporal alignment</span><span><i>03</i>Spatiotemporal grounding</span><span><i>04</i>Target primitive accuracy</span></div></article></div>
+      <div class="data-tabs segmented" role="tablist" aria-label="Training figures"><button role="tab" id="data-tab-construction" aria-controls="data-panel-construction" aria-selected="true" class="is-active" data-figure-tab="construction">Data construction</button><button role="tab" id="data-tab-training" aria-controls="data-panel-training" aria-selected="false" tabindex="-1" data-figure-tab="training">Training &amp; mask execution</button></div>
+      <figure class="paper-figure" id="data-panel-construction" role="tabpanel" aria-labelledby="data-tab-construction"><a class="figure-frame" href="../assets/data-pipeline.png" data-lightbox><img src="../assets/data-pipeline.png" alt="Figure 2: Kimi-K2.5 temporal chain annotation, consistency checks, and Qwen2.5-VL filtering" loading="lazy"><span class="expand-figure">Expand figure ↗</span></a><figcaption><strong>From mask annotations to grounded reasoning.</strong> Kimi-K2.5 proposes temporal chains; consistency checks and contextual-primitive filtering retain grounded annotations. Figure 2.</figcaption></figure>
+      <figure class="paper-figure" id="data-panel-training" role="tabpanel" aria-labelledby="data-tab-training" hidden><a class="figure-frame" href="../assets/training.png" data-lightbox><img src="../assets/training.png" alt="Figure 3: supervised initialization, four aligned rewards, group-normalized advantages, and SAM3 mask execution" loading="lazy"><span class="expand-figure">Expand figure ↗</span></a><figcaption><strong>Chain-aligned training.</strong> Candidate chains receive four rewards; selected target primitives provide timestamped box prompts and temporal support to SAM3. Figure 3.</figcaption></figure>
+    </div></section>
+
+    <section class="section shell" id="results"><div class="section-heading"><div><p class="eyebrow">05 / THE NUMBERS</p><h2>Grounded reasoning.<br>Consistent gains.</h2></div><p>Five video reasoning segmentation benchmarks, three model backbones. Explore the reported scores and the controlled ablations.</p></div><div class="segmented result-tabs" role="tablist" aria-label="Benchmark results"><button class="is-active" data-result-tab="groundmore">GroundMoRe</button><button data-result-tab="general">General VRS</button><button data-result-tab="representation">Representation</button><button data-result-tab="training">Training &amp; rewards</button></div><div id="results-content"><p>Loading the paper’s reported scores…</p></div><noscript><p><a href="../#results">View the complete result tables on the original project page.</a></p></noscript></section>
+
+    <section class="section tint-blue" id="authors"><div class="shell closing-grid"><div><p class="eyebrow">06 / PAPER &amp; PEOPLE</p><h2>Think Visually Across<br>Space and Time.</h2><p class="closing-subtitle">Grounded Reasoning for Video Segmentation</p><div class="closing-actions"><a class="pill primary" href="assets/TCoVP_arXiv.pdf" target="_blank" rel="noopener">Read the paper ↗</a><a class="pill" href="https://github.com/Victor-wjw/TCoVP" target="_blank" rel="noopener noreferrer">View repository ↗</a></div><p class="release-note">Model and code release: forthcoming, as described in the manuscript.</p></div><div class="authors-block"><p class="author-names">Junwei Wen<sup>1*</sup> · Deshui Miao<sup>1*</sup><br>Guangming Lu<sup>1</sup> · Ming-Hsuan Yang<sup>4</sup><br>Xin Li<sup>1,2,3†</sup> · Wenjie Pei<sup>1,2†</sup></p><p><sup>1</sup> Harbin Institute of Technology, Shenzhen<br><sup>2</sup> Pengcheng Laboratory<br><sup>3</sup> Pazhou Lab (Huangpu)<br><sup>4</sup> University of California at Merced</p><p class="author-notes">* Equal contribution. &nbsp; † Corresponding authors.</p></div></div></section>
+  </main>
+  <footer class="shell footer"><a class="brand" href="#overview"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>TCo<span>VP</span></a><p>Temporal Chain of Video Primitives</p><a href="../">Original project page ↗</a><a href="#overview">Back to top ↑</a></footer>
+  <dialog class="lightbox" id="figure-dialog" aria-label="Expanded paper figure"><div class="lightbox-toolbar"><span>FIGURE VIEW</span><a id="figure-original" href="#" target="_blank" rel="noopener">Open original ↗</a><button id="figure-close" class="icon-button" aria-label="Close expanded figure">×</button></div><img id="figure-expanded" alt=""></dialog>
+</body>
+</html>
