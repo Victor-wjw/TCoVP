@@ -1,0 +1,36 @@
+{
+  "sourceType": "demo_recording_transcription",
+  "sourceVideo": "docs/assets/video_demo_with_cover.mp4",
+  "sourceVideoSha256": "bef18a628e7a5cd3cb8f3f9ad0f9615efb774b6aab0af8b9f694960776413d87",
+  "transcriptionMethod": "Visual transcription of the Grounded Reasoning Trace and Grounded Answer panels in the supplied demo recording.",
+  "traceSeekEnabled": false,
+  "timestampNote": "Timestamps inside the trace refer to the original scene, not the replay position in the demo recording or the cropped webpage sample.",
+  "provenanceNote": "This is a transcription of visible recorded UI text, not a recovered raw inference file and not a new inference run.",
+  "formattingNote": "Visual line wrapping is normalized into one paragraph. A <think> wrapper is added for display; it is not visible around the recorded trace. The existing <answer> wrapper is preserved from the recorded answer.",
+  "sampleId": "store",
+  "verificationStatus": "unverified_full_trace",
+  "traceComplete": false,
+  "answerComplete": true,
+  "sourceRecordingSeconds": [
+    64,
+    70,
+    76,
+    82,
+    88
+  ],
+  "traceFile": null,
+  "partialTranscriptFile": "partial-transcript.txt",
+  "answerFile": "answer.txt",
+  "wrappers": {
+    "think": "not_added_to_incomplete_excerpt",
+    "answer": "preserved_from_recorded_ui"
+  },
+  "missingTextNote": "The trace panel is scrolled to the top. The final visible line ends at [97,25,197,224]; the rest of the trace is outside the recorded panel viewport. No hidden text has been guessed.",
+  "sourceCropXYWH": [
+    1535,
+    275,
+    785,
+    885
+  ],
+  "displayExcerptNote": "Only complete verified observations through original-scene time39.0s are displayed. The cropped final sentence is omitted; the answer is fully transcribed."
+}

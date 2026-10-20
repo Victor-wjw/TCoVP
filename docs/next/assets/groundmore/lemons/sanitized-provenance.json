@@ -1,0 +1,60 @@
+{
+  "id": "lemons",
+  "dataset": "GroundMoRe",
+  "split": "test_v2",
+  "video_id": "gReGmQwSEu0_0055_0110",
+  "expression_id": "3",
+  "query": "Who might not put lemons into a bowl if the mom had not cut the lemons?",
+  "model": "Qwen3-VL-4B TCoVP",
+  "checkpoint": "rl_13k_qwen3_vl_4b_full_stable/checkpoint-3144",
+  "source": "https://huggingface.co/datasets/groundmore/GroundMoRe",
+  "source_metadata": "https://huggingface.co/datasets/groundmore/GroundMoRe/blob/main/test_v2.json",
+  "run_kind": "Native-frame-rate showcase inference, original query with no supplied boxes or expected answer",
+  "frames": 90,
+  "replay_fps": 6.0,
+  "model_fps": 6.0,
+  "trace_time_scale": 1.0,
+  "duration": 15.0,
+  "predicted_time_spans_model_clock": [
+    [
+      0.0,
+      14.8
+    ]
+  ],
+  "predicted_time_spans_replay_clock": [
+    [
+      0.0,
+      14.8
+    ]
+  ],
+  "anchor_frame_indices": [
+    0
+  ],
+  "anchor_times_replay_clock": [
+    0.0
+  ],
+  "mask_nonempty_range_frames": [
+    0,
+    89
+  ],
+  "mask_nonempty_frames": 90,
+  "mask_time_scope": "predicted",
+  "extra_anchor_window": null,
+  "target": "girl",
+  "mask_scope_note": "Native 6fps model support with SAM3 predicted time scope; no extra anchor window is applied.",
+  "mask_source": "Original SAM3 output, no mask edits",
+  "trace_source": "Original VLM generated text, unchanged",
+  "step_frames": [
+    0,
+    29,
+    45
+  ],
+  "step_times": [
+    0.0,
+    4.833333333333333,
+    7.5
+  ],
+  "poster_frame": 0,
+  "raw_sha256": "fcb2fdf5bfdd9c129ddb99ddd77ccf9b56b80d3fadd9c5b0c730dd13a799cb90",
+  "masked_sha256": "2b0ae02b49b2e3b1a43a615e108309bb4344f438b34d43501f58cffbb1199102"
+}

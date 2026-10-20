@@ -1,0 +1,4 @@
+<think>
+The video shows a man walking through a store. At <t>0.0</t>s, <obj>man_in_suit</obj><time>0.0 - 65.0</time><box>[176,31,281,224]</box>at<t>0.0</t>s is walking with a woman. At <t>21.7</t>s, <obj>man_in_suit</obj><time>0.0 - 65.0</time><box>[181,29,244,213]</box>at<t>21.7</t>s approaches the counter where <obj>service_worker_1</obj><time>17.3 - 65.0</time><box>[231,34,286,134]</box>at<t>21.7</t>s and <obj>service_worker_2</obj><time>17.3 - 65.0</time><box>[126,34,176,134]</box>at<t>21.7</t>s are standing. At <t>26.0</t>s, <obj>man_in_suit</obj><time>0.0 - 65.0</time><box>[172,22,244,224]</box>at<t>26.0</t>s is talking to the woman beside him. At <t>39.0</t>s, <obj>man_in_suit</obj><time>0.0 - 65.0</time><box>[164,22,265,224]</box>at<t>39.0</t>s walks away from the counter.
+</think>
+<answer><obj>man_in_suit</obj><time>0.0 - 65.0</time><box>[176,31,281,224]</box>at<t>0.0</t>s</answer>

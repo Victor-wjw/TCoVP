@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "case_id": "revos-two-sheep",
+  "source_url": "https://github.com/cilinyan/ReVOS-api",
+  "mode": "real-sam3-png-overlay",
+  "fps": 3.0,
+  "frame_count": 30,
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 10.0,
+  "last_observation_seconds": 9.666667,
+  "source_frame_sequence_sha256": "0453fa325457a2f86000ffa65794bd4ef2287028aea32ad056a98046b6cb016d",
+  "mask_sequence_sha256": "0854dde15dadbab064ed4a5902bec3db7883be7c2ed779d609919b7f5a2e007e",
+  "mask_frames": 30,
+  "nonempty_mask_frames": 30,
+  "all_masks_empty": false,
+  "overlay": {
+    "color_rgb": [
+      38,
+      210,
+      195
+    ],
+    "opacity": 0.36,
+    "contour": "one-pixel inner boundary",
+    "geometry_modified": false
+  },
+  "poster_frame": 15,
+  "poster_time_seconds": 5.0,
+  "contact_sheet_frames": [
+    0,
+    3,
+    10,
+    15,
+    21,
+    28
+  ],
+  "watermark_policy": "No cropping, inpainting, resizing, or watermark removal; the source frame canvas is retained.",
+  "timeline_policy": "One encoded frame per input frame in numeric order; no retiming, interpolation, skipped or repeated frames.",
+  "videos": [
+    {
+      "filename": "raw.mp4",
+      "frame_count": 30,
+      "duration_seconds": 10.0
+    },
+    {
+      "filename": "masked.mp4",
+      "frame_count": 30,
+      "duration_seconds": 10.0
+    }
+  ],
+  "frames": [
+    {
+      "frame": 0,
+      "frame_id": "000000",
+      "time_seconds": 0.0,
+      "foreground_pixels": 294909,
+      "foreground_fraction": 0.14222078
+    },
+    {
+      "frame": 1,
+      "frame_id": "000001",
+      "time_seconds": 0.333333,
+      "foreground_pixels": 163360,
+      "foreground_fraction": 0.07878086
+    },
+    {
+      "frame": 2,
+      "frame_id": "000002",
+      "time_seconds": 0.666667,
+      "foreground_pixels": 157937,
+      "foreground_fraction": 0.07616561
+    },
+    {
+      "frame": 3,
+      "frame_id": "000003",
+      "time_seconds": 1.0,
+      "foreground_pixels": 165796,
+      "foreground_fraction": 0.07995563
+    },
+    {
+      "frame": 4,
+      "frame_id": "000004",
+      "time_seconds": 1.333333,
+      "foreground_pixels": 169320,
+      "foreground_fraction": 0.08165509
+    },
+    {
+      "frame": 5,
+      "frame_id": "000005",
+      "time_seconds": 1.666667,
+      "foreground_pixels": 169767,
+      "foreground_fraction": 0.08187066
+    },
+    {
+      "frame": 6,
+      "frame_id": "000006",
+      "time_seconds": 2.0,
+      "foreground_pixels": 179075,
+      "foreground_fraction": 0.08635947
+    },
+    {
+      "frame": 7,
+      "frame_id": "000007",
+      "time_seconds": 2.333333,
+      "foreground_pixels": 188087,
+      "foreground_fraction": 0.09070554
+    },
+    {
+      "frame": 8,
+      "frame_id": "000008",
+      "time_seconds": 2.666667,
+      "foreground_pixels": 187495,
+      "foreground_fraction": 0.09042004
+    },
+    {
+      "frame": 9,
+      "frame_id": "000009",
+      "time_seconds": 3.0,
+      "foreground_pixels": 190613,
+      "foreground_fraction": 0.09192371
+    },
+    {
+      "frame": 10,
+      "frame_id": "000010",
+      "time_seconds": 3.333333,
+      "foreground_pixels": 194110,
+      "foreground_fraction": 0.09361015
+    },
+    {
+      "frame": 11,
+      "frame_id": "000011",
+      "time_seconds": 3.666667,
+      "foreground_pixels": 177663,
+      "foreground_fraction": 0.08567853
+    },
+    {
+      "frame": 12,
+      "frame_id": "000012",
+      "time_seconds": 4.0,
+      "foreground_pixels": 176636,
+      "foreground_fraction": 0.08518326
+    },
+    {
+      "frame": 13,
+      "frame_id": "000013",
+      "time_seconds": 4.333333,
+      "foreground_pixels": 193621,
+      "foreground_fraction": 0.09337432
+    },
+    {
+      "frame": 14,
+      "frame_id": "000014",
+      "time_seconds": 4.666667,
+      "foreground_pixels": 183323,
+      "foreground_fraction": 0.08840808
+    },
+    {
+      "frame": 15,
+      "frame_id": "000015",
+      "time_seconds": 5.0,
+      "foreground_pixels": 169515,
+      "foreground_fraction": 0.08174913
+    },
+    {
+      "frame": 16,
+      "frame_id": "000016",
+      "time_seconds": 5.333333,
+      "foreground_pixels": 181943,
+      "foreground_fraction": 0.08774257
+    },
+    {
+      "frame": 17,
+      "frame_id": "000017",
+      "time_seconds": 5.666667,
+      "foreground_pixels": 178971,
+      "foreground_fraction": 0.08630932
+    },
+    {
+      "frame": 18,
+      "frame_id": "000018",
+      "time_seconds": 6.0,
+      "foreground_pixels": 174860,
+      "foreground_fraction": 0.08432677
+    },
+    {
+      "frame": 19,
+      "frame_id": "000019",
+      "time_seconds": 6.333333,
+      "foreground_pixels": 182159,
+      "foreground_fraction": 0.08784674
+    },
+    {
+      "frame": 20,
+      "frame_id": "000020",
+      "time_seconds": 6.666667,
+      "foreground_pixels": 182666,
+      "foreground_fraction": 0.08809124
+    },
+    {
+      "frame": 21,
+      "frame_id": "000021",
+      "time_seconds": 7.0,
+      "foreground_pixels": 184270,
+      "foreground_fraction": 0.08886478
+    },
+    {
+      "frame": 22,
+      "frame_id": "000022",
+      "time_seconds": 7.333333,
+      "foreground_pixels": 188046,
+      "foreground_fraction": 0.09068576
+    },
+    {
+      "frame": 23,
+      "frame_id": "000023",
+      "time_seconds": 7.666667,
+      "foreground_pixels": 183380,
+      "foreground_fraction": 0.08843557
+    },
+    {
+      "frame": 24,
+      "frame_id": "000024",
+      "time_seconds": 8.0,
+      "foreground_pixels": 150938,
+      "foreground_fraction": 0.07279032
+    },
+    {
+      "frame": 25,
+      "frame_id": "000025",
+      "time_seconds": 8.333333,
+      "foreground_pixels": 118371,
+      "foreground_fraction": 0.05708478
+    },
+    {
+      "frame": 26,
+      "frame_id": "000026",
+      "time_seconds": 8.666667,
+      "foreground_pixels": 117140,
+      "foreground_fraction": 0.05649113
+    },
+    {
+      "frame": 27,
+      "frame_id": "000027",
+      "time_seconds": 9.0,
+      "foreground_pixels": 151574,
+      "foreground_fraction": 0.07309703
+    },
+    {
+      "frame": 28,
+      "frame_id": "000028",
+      "time_seconds": 9.333333,
+      "foreground_pixels": 169191,
+      "foreground_fraction": 0.08159288
+    },
+    {
+      "frame": 29,
+      "frame_id": "000029",
+      "time_seconds": 9.666667,
+      "foreground_pixels": 158422,
+      "foreground_fraction": 0.0763995
+    }
+  ]
+}

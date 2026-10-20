@@ -1,0 +1,4 @@
+<think>
+At <t>2.3</t>s, <obj>coach</obj><time>2.3 - 4.7</time><box>[210,49,315,184]</box>at<t>2.3</t>s extends his arm to clasp hands with <obj>athlete_with_dyed_hair</obj><time>0.0 - 11.7</time><box>[134,49,223,190]</box>at<t>2.3</t>s. The interaction continues at <t>3.0</t>s where <obj>coach</obj><time>2.3 - 4.7</time><box>[223,52,286,188]</box>at<t>3.0</t>s maintains the handshake with the athlete. By <t>4.7</t>s, <obj>coach</obj><time>2.3 - 4.7</time><box>[189,49,252,193]</box>at<t>4.7</t>s embraces the athlete, confirming the sequence of clasping hands followed by hugging.
+</think>
+<answer><obj>coach</obj><time>2.3 - 4.7</time><box>[210,49,315,184]</box>at<t>2.3</t>s</answer>

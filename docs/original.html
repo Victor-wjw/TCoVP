@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9f6">
+  <meta name="description" content="TCoVP grounds video reasoning in a temporal chain of entity references, timestamps, and bounding boxes for video reasoning segmentation.">
+  <meta property="og:title" content="Think Visually Across Space and Time">
+  <meta property="og:description" content="Grounded Reasoning for Video Segmentation. A temporal chain of video primitives connects which entity, when, and where.">
+  <meta property="og:type" content="website">
+  <title>Think Visually Across Space and Time</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <div class="nav-links">
+        <a href="#demo">Demo</a><a href="#results">Results</a><a href="#method">Method</a><a href="#data">Data</a><a href="#examples">Examples</a><a href="#citation">Citation</a>
+      </div>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero content" id="top" aria-labelledby="project-title">
+      <h1 id="project-title">Think Visually Across Space and Time:<br><span>Grounded Reasoning for Video Segmentation</span></h1>
+      <div class="authors" id="authors" aria-label="Authors and affiliations">
+        <p class="author-names">
+          <span>Junwei Wen<sup>1*</sup></span>,
+          <span>Deshui Miao<sup>1*</sup></span>,
+          <span>Guangming Lu<sup>1</sup></span>,
+          <span>Ming-Hsuan Yang<sup>4</sup></span>,
+          <span>Xin Li<sup>1,2,3†</sup></span>,
+          <span>Wenjie Pei<sup>1,2†</sup></span>
+        </p>
+        <p class="author-affiliations">
+          <span><sup>1</sup>Harbin Institute of Technology, Shenzhen</span>
+          <span><sup>2</sup>Pengcheng Laboratory</span>
+          <span><sup>3</sup>Pazhou Lab (Huangpu)</span>
+          <span><sup>4</sup>University of California at Merced</span>
+        </p>
+        <p class="author-notes"><span><sup>*</sup>Equal contribution.</span><span><sup>†</sup>Corresponding authors.</span></p>
+      </div>
+      <div class="resource-links" aria-label="Project resources">
+        <!-- RESOURCES: Cite and Watch demo link to their reserved sections. -->
+        <button class="button secondary" type="button" disabled title="arXiv link coming soon"><svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 12h6M9 16h6"/></svg><span>arXiv</span></button>
+        <a class="button secondary" href="https://github.com/Victor-wjw/TCoVP" target="_blank" rel="noopener noreferrer" aria-label="Open the TCoVP GitHub repository"><svg class="button-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.1c-3.12.68-3.78-1.32-3.78-1.32-.51-1.3-1.24-1.65-1.24-1.65-1.02-.7.08-.68.08-.68 1.13.08 1.72 1.16 1.72 1.16 1.01 1.73 2.64 1.23 3.28.94.1-.73.39-1.23.71-1.51-2.49-.28-5.11-1.25-5.11-5.54 0-1.23.44-2.23 1.15-3.02-.11-.28-.5-1.43.11-2.98 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.55.22 2.7.11 2.98.72.79 1.15 1.79 1.15 3.02 0 4.3-2.62 5.26-5.12 5.54.4.35.76 1.03.76 2.08v3.08c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z"/></svg><span>GitHub</span></a>
+        <button class="button secondary" type="button" disabled title="Hugging Face resources coming soon"><svg class="button-icon hugging-face-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="10.5" r="8.5" fill="#f4c55b"/><path d="M8.5 9v1m7-1v1m-6 3q2.5 2 5 0" fill="none" stroke="#745532" stroke-width="1.5" stroke-linecap="round"/><path d="m3.2 12.4 3.2 2.8-1.1-3.1c-.4-1.2 1-1.7 1.5-.6l2.6 5c.6 1.3 0 3-1.4 3.5-1.5.6-3 .2-4.1-1.1L1.7 15c-.9-1.5.2-3.4 1.5-2.6Zm17.6 0-3.2 2.8 1.1-3.1c.4-1.2-1-1.7-1.5-.6l-2.6 5c-.6 1.3 0 3 1.4 3.5 1.5.6 3 .2 4.1-1.1l2.2-3.9c.9-1.5-.2-3.4-1.5-2.6Z" fill="#f4c55b" stroke="#ca9a3c" stroke-width=".6"/></svg><span>Hugging Face</span></button>
+        <a class="button secondary" href="#citation"><svg class="button-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 5h7v7c0 4-2 6.5-6 7v-3c2-.4 3-1.6 3-4H4V5Zm10 0h7v7c0 4-2 6.5-6 7v-3c2-.4 3-1.6 3-4h-4V5Z"/></svg><span>Cite</span></a>
+        <a class="button primary" href="#demo"><svg class="button-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M7 4.9c0-.8.9-1.3 1.6-.9l11.2 7.1a1 1 0 0 1 0 1.8L8.6 20c-.7.4-1.6-.1-1.6-.9V4.9Z"/></svg><span>Watch demo</span></a>
+      </div>
+    </section>
+
+    <section class="section content" id="demo" aria-labelledby="demo-title">
+      <div class="section-heading"><p class="eyebrow">See it in action</p><h2 id="demo-title">Video demo</h2></div>
+      <div class="demo-frame video-frame" role="region" aria-label="English TCoVP demonstration video">
+        <video controls playsinline preload="metadata" aria-label="English TCoVP demonstration">
+          <source src="assets/video_demo_with_cover.mp4" type="video/mp4">
+          Your browser does not support embedded video. <a href="assets/video_demo_with_cover.mp4">Download the English demo video.</a>
+        </video>
+        <div class="video-meta">
+          <p>Watch grounded reasoning, target primitive selection, and mask execution unfold across three video examples.</p>
+          <a href="assets/video_demo_with_cover.mp4" download>Download video <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="abstract-band" id="abstract" aria-labelledby="abstract-title">
+      <div class="content abstract-layout">
+        <div><p class="eyebrow">Overview</p><h2 id="abstract-title">Abstract</h2></div>
+        <div class="abstract-text">
+          <p>Video Reasoning Segmentation (VRS) requires a model to identify an implicitly described target and predict its pixel-level mask trajectory, while resolving the spatial relations and temporal events that determine the answer. Text-only Chain-of-Thought (CoT) can explain a target choice without making the underlying visual references explicit, leaving a <strong>video reference gap</strong> between linguistic inference and the evidence distributed across frames.</p>
+          <p>We introduce <strong>Temporal Chain of Video Primitives (TCoVP)</strong>, a spatiotemporally grounded form of Video CoT that organizes query-relevant observations into a chronological reasoning chain. Each primitive associates an entity reference with temporal support and timestamped spatial evidence, and the chain interleaves these references with language to guide reasoning about which entity is relevant, when the queried event holds, and where its evidence appears. The selected target primitives then provide box prompts and temporal support for video mask prediction.</p>
+          <p>We construct <strong>TCoVP-SFT-15k</strong> and <strong>TCoVP-RL-13k</strong> to learn this representation through supervised fine-tuning and chain-aligned reinforcement learning. Extensive experiments across five VRS benchmarks and three model backbones demonstrate the strong performance of TCoVP, highlighting the effectiveness of organizing spatial and temporal evidence within the reasoning process. All models and code will be publicly released.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section content" id="results" aria-labelledby="results-title">
+      <div class="section-heading"><p class="eyebrow">Quantitative results</p><h2 id="results-title">Grounded reasoning. Consistent gains.</h2></div>
+      <p class="section-intro">Evaluation across implicit target resolution and motion-grounded segmentation, using Qwen2.5-VL-3B, Qwen3-VL-4B, and Molmo2-4B.</p>
+      <div class="tab-group" data-tab-group>
+        <div class="tab-list" aria-label="Result categories">
+          <button type="button" id="tab-groundmore" data-tab="panel-groundmore">GroundMoRe</button>
+          <button type="button" id="tab-general" data-tab="panel-general">General VRS</button>
+          <button type="button" id="tab-ablation" data-tab="panel-ablation">Reasoning representation</button>
+          <button type="button" id="tab-training" data-tab="panel-training">Training &amp; rewards</button>
+        </div>
+        <p class="table-hint">Scroll horizontally to view all columns on smaller screens.</p>
+        <div id="panel-groundmore" class="tab-panel">
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Table 1: GroundMoRe results; scroll horizontally to see all metrics">
+            <table class="paper-table table-1" data-source="tab:groundmore_results">
+<caption><span class="table-number">Table 1.</span> Performance comparison on the motion-grounded video reasoning segmentation benchmark <strong>GroundMoRe</strong>. Best results are <strong>bolded</strong>, and the second best results are <u>underlined</u>.</caption>
+<thead><tr>
+<th scope="col" rowspan="2">Methods</th>
+<th scope="colgroup" colspan="3" class="benchmark">Overall</th>
+<th scope="colgroup" colspan="3" class="benchmark">Causal</th>
+<th scope="colgroup" colspan="3" class="benchmark">Sequential</th>
+<th scope="colgroup" colspan="3" class="benchmark">Counterfactual</th>
+<th scope="colgroup" colspan="3" class="benchmark">Descriptive</th>
+</tr>
+<tr class="metric-row">
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+</tr>
+</thead><tbody>
+<tr class="table-group"><th colspan="16" scope="rowgroup"><em><strong>Two-Stage Baseline</strong></em></th></tr>
+<tr class="rule-above">
+<th scope="row">ViLA <span class="table-reference">(<span title="Vila: On pre-training for visual language models">Lin et al., 2024</span>)</span>+ReferFormer</th>
+<td class="metric-start">16.37</td>
+<td>14.84</td>
+<td>17.89</td>
+<td class="metric-start">15.92</td>
+<td>14.33</td>
+<td>17.52</td>
+<td class="metric-start">16.30</td>
+<td>14.94</td>
+<td>17.67</td>
+<td class="metric-start">13.63</td>
+<td>12.35</td>
+<td>14.91</td>
+<td class="metric-start">19.61</td>
+<td>17.78</td>
+<td>21.45</td>
+</tr>
+<tr>
+<th scope="row">ViLA <span class="table-reference">(<span title="Vila: On pre-training for visual language models">Lin et al., 2024</span>)</span>+SgMg</th>
+<td class="metric-start">17.07</td>
+<td>15.25</td>
+<td>18.89</td>
+<td class="metric-start">17.34</td>
+<td>15.43</td>
+<td>19.26</td>
+<td class="metric-start">16.30</td>
+<td>14.57</td>
+<td>18.04</td>
+<td class="metric-start">15.31</td>
+<td>13.96</td>
+<td>16.67</td>
+<td class="metric-start">19.18</td>
+<td>16.96</td>
+<td>21.40</td>
+</tr>
+<tr>
+<th scope="row">ViLA <span class="table-reference">(<span title="Vila: On pre-training for visual language models">Lin et al., 2024</span>)</span>+HTR</th>
+<td class="metric-start">15.72</td>
+<td>13.90</td>
+<td>17.53</td>
+<td class="metric-start">16.46</td>
+<td>14.60</td>
+<td>18.31</td>
+<td class="metric-start">15.11</td>
+<td>13.39</td>
+<td>16.83</td>
+<td class="metric-start">12.61</td>
+<td>11.22</td>
+<td>13.99</td>
+<td class="metric-start">18.37</td>
+<td>16.10</td>
+<td>20.63</td>
+</tr>
+<tr>
+<th scope="row">VideoChat2 <span class="table-reference">(<span title="Mvbench: A comprehensive multi-modal video understanding benchmark">Li et al., 2024</span>)</span>+ReferFormer</th>
+<td class="metric-start">15.38</td>
+<td>13.84</td>
+<td>16.93</td>
+<td class="metric-start">14.74</td>
+<td>13.10</td>
+<td>16.37</td>
+<td class="metric-start">13.95</td>
+<td>12.69</td>
+<td>15.21</td>
+<td class="metric-start">13.12</td>
+<td>11.80</td>
+<td>14.43</td>
+<td class="metric-start">19.82</td>
+<td>17.89</td>
+<td>21.74</td>
+</tr>
+<tr>
+<th scope="row">VideoChat2 <span class="table-reference">(<span title="Mvbench: A comprehensive multi-modal video understanding benchmark">Li et al., 2024</span>)</span>+SgMg</th>
+<td class="metric-start">16.65</td>
+<td>14.83</td>
+<td>18.48</td>
+<td class="metric-start">16.64</td>
+<td>14.75</td>
+<td>18.54</td>
+<td class="metric-start">14.70</td>
+<td>13.02</td>
+<td>16.38</td>
+<td class="metric-start">15.22</td>
+<td>13.87</td>
+<td>16.58</td>
+<td class="metric-start">20.01</td>
+<td>17.68</td>
+<td>22.34</td>
+</tr>
+<tr>
+<th scope="row">VideoChat2 <span class="table-reference">(<span title="Mvbench: A comprehensive multi-modal video understanding benchmark">Li et al., 2024</span>)</span>+HTR</th>
+<td class="metric-start">15.08</td>
+<td>13.25</td>
+<td>16.90</td>
+<td class="metric-start">15.91</td>
+<td>14.00</td>
+<td>17.81</td>
+<td class="metric-start">13.91</td>
+<td>12.33</td>
+<td>15.50</td>
+<td class="metric-start">11.97</td>
+<td>10.56</td>
+<td>13.37</td>
+<td class="metric-start">18.17</td>
+<td>15.82</td>
+<td>20.52</td>
+</tr>
+<tr>
+<th scope="row">SeViLA <span class="table-reference">(<span title="Self-chained image-language model for video localization and question answering">Yu et al., 2023</span>)</span>+ReferFormer</th>
+<td class="metric-start">20.37</td>
+<td>18.99</td>
+<td>21.75</td>
+<td class="metric-start">21.29</td>
+<td>19.86</td>
+<td>22.72</td>
+<td class="metric-start">18.27</td>
+<td>17.06</td>
+<td>19.48</td>
+<td class="metric-start">17.56</td>
+<td>16.37</td>
+<td>18.75</td>
+<td class="metric-start">24.01</td>
+<td>22.35</td>
+<td>25.66</td>
+</tr>
+<tr>
+<th scope="row">SeViLA <span class="table-reference">(<span title="Self-chained image-language model for video localization and question answering">Yu et al., 2023</span>)</span>+SgMg</th>
+<td class="metric-start">22.34</td>
+<td>20.92</td>
+<td>23.75</td>
+<td class="metric-start">21.60</td>
+<td>20.17</td>
+<td>23.02</td>
+<td class="metric-start">21.68</td>
+<td>20.47</td>
+<td>22.89</td>
+<td class="metric-start">20.46</td>
+<td>19.32</td>
+<td>21.61</td>
+<td class="metric-start">24.53</td>
+<td>22.83</td>
+<td>26.22</td>
+</tr>
+<tr>
+<th scope="row">SeViLA <span class="table-reference">(<span title="Self-chained image-language model for video localization and question answering">Yu et al., 2023</span>)</span>+HTR</th>
+<td class="metric-start">21.75</td>
+<td>19.85</td>
+<td>23.64</td>
+<td class="metric-start">22.28</td>
+<td>20.42</td>
+<td>24.15</td>
+<td class="metric-start">20.37</td>
+<td>18.60</td>
+<td>22.14</td>
+<td class="metric-start">19.70</td>
+<td>18.03</td>
+<td>21.36</td>
+<td class="metric-start">24.41</td>
+<td>22.11</td>
+<td>26.71</td>
+</tr>
+<tr class="table-group"><th colspan="16" scope="rowgroup"><strong><em>Video Reasoning Segmentation Baseline</em></strong></th></tr>
+<tr class="rule-above">
+<th scope="row">PG-Video-LLaVA <span class="table-reference">(<span title="Pg-video-llava: Pixel grounding large video-language models">Munasinghe et al., 2023</span>)</span></th>
+<td class="metric-start">11.17</td>
+<td>11.47</td>
+<td>10.89</td>
+<td class="metric-start">10.57</td>
+<td>10.82</td>
+<td>10.33</td>
+<td class="metric-start">10.93</td>
+<td>11.15</td>
+<td>10.71</td>
+<td class="metric-start">10.36</td>
+<td>10.37</td>
+<td>10.34</td>
+<td class="metric-start">12.51</td>
+<td>13.04</td>
+<td>11.99</td>
+</tr>
+<tr>
+<th scope="row">PG-Video-LLaVA+SAM2 <span class="table-reference">(<span title="SAM 2: Segment Anything in Images and Videos">Ravi et al., 2024</span>)</span></th>
+<td class="metric-start">11.85</td>
+<td>11.15</td>
+<td>12.55</td>
+<td class="metric-start">13.35</td>
+<td>12.84</td>
+<td>13.85</td>
+<td class="metric-start">3.85</td>
+<td>2.49</td>
+<td>5.22</td>
+<td class="metric-start">15.52</td>
+<td>15.16</td>
+<td>15.89</td>
+<td class="metric-start">12.11</td>
+<td>11.37</td>
+<td>12.85</td>
+</tr>
+<tr>
+<th scope="row">VISA <span class="table-reference">(<span title="Visa: Reasoning video object segmentation via large language models">Yan et al., 2024</span>)</span> (Chat-UniVi-13B)</th>
+<td class="metric-start">5.31</td>
+<td>4.72</td>
+<td>5.90</td>
+<td class="metric-start">6.07</td>
+<td>5.50</td>
+<td>6.64</td>
+<td class="metric-start">4.48</td>
+<td>3.80</td>
+<td>5.15</td>
+<td class="metric-start">5.10</td>
+<td>4.34</td>
+<td>5.86</td>
+<td class="metric-start">5.39</td>
+<td>5.02</td>
+<td>5.77</td>
+</tr>
+<tr>
+<th scope="row">MORA <span class="table-reference">(<span title="Motion-grounded video reasoning: Understanding and perceiving motion at pixel level">Deng et al., 2025</span>)</span> (LLaVA-13B)</th>
+<td class="metric-start">23.13</td>
+<td>22.79</td>
+<td>23.46</td>
+<td class="metric-start">21.62</td>
+<td>21.46</td>
+<td>21.79</td>
+<td class="metric-start">22.43</td>
+<td>22.03</td>
+<td>22.83</td>
+<td class="metric-start">26.37</td>
+<td>25.87</td>
+<td>26.88</td>
+<td class="metric-start">22.63</td>
+<td>22.30</td>
+<td>22.97</td>
+</tr>
+<tr class="table-group"><th colspan="16" scope="rowgroup"><em><strong>RL-based VRS Methods</strong></em></th></tr>
+<tr class="rule-above">
+<th scope="row">Veason-R1-3B <span class="table-reference">(<span title="Reinforcing Video Reasoning Segmentation to Think Before It Segments">Gong et al., 2026</span>)</span> (Qwen2.5-VL-3B)</th>
+<td class="metric-start">23.53</td>
+<td>22.03</td>
+<td>25.04</td>
+<td class="metric-start">23.73</td>
+<td>22.04</td>
+<td>25.43</td>
+<td class="metric-start">21.06</td>
+<td>19.80</td>
+<td>22.31</td>
+<td class="metric-start">22.78</td>
+<td>21.50</td>
+<td>24.06</td>
+<td class="metric-start">26.51</td>
+<td>24.77</td>
+<td>28.26</td>
+</tr>
+<tr>
+<th scope="row">VideoSEG-O3-2B <span class="table-reference">(<span title="VideoSEG-O3: A Multi-turn Reinforcement Learning Framework for Reasoning Video Object Segmentation">Dai et al., 2026</span>)</span> (Qwen3-VL-2B)</th>
+<td class="metric-start">29.06</td>
+<td>27.39</td>
+<td>30.72</td>
+<td class="metric-start">30.93</td>
+<td>29.21</td>
+<td>32.65</td>
+<td class="metric-start">26.97</td>
+<td>25.42</td>
+<td>28.52</td>
+<td class="metric-start">22.04</td>
+<td>20.62</td>
+<td>23.46</td>
+<td class="metric-start">35.49</td>
+<td>33.54</td>
+<td>37.44</td>
+</tr>
+<tr>
+<th scope="row">VideoSEG-O3-4B <span class="table-reference">(<span title="VideoSEG-O3: A Multi-turn Reinforcement Learning Framework for Reasoning Video Object Segmentation">Dai et al., 2026</span>)</span> (Qwen3-VL-4B)</th>
+<td class="metric-start">31.96</td>
+<td>30.19</td>
+<td>33.73</td>
+<td class="metric-start">34.68</td>
+<td>32.88</td>
+<td>36.47</td>
+<td class="metric-start">29.71</td>
+<td>28.14</td>
+<td>31.28</td>
+<td class="metric-start">25.06</td>
+<td>23.51</td>
+<td>26.60</td>
+<td class="metric-start">37.39</td>
+<td>35.21</td>
+<td>39.56</td>
+</tr>
+<tr class="ours rule-above">
+<th scope="row"><strong>TCoVP-3B (Ours) (Qwen2.5-VL-3B)</strong></th>
+<td class="metric-start">53.67</td>
+<td>52.57</td>
+<td>54.76</td>
+<td class="metric-start"><u>52.95</u></td>
+<td><u>51.75</u></td>
+<td><strong>54.15</strong></td>
+<td class="metric-start">57.04</td>
+<td>56.06</td>
+<td>58.02</td>
+<td class="metric-start">50.82</td>
+<td>49.86</td>
+<td>51.78</td>
+<td class="metric-start">53.86</td>
+<td>52.64</td>
+<td>55.08</td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>TCoVP-4B (Ours) (Qwen3-VL-4B)</strong></th>
+<td class="metric-start"><u>55.21</u></td>
+<td><u>54.40</u></td>
+<td><u>56.01</u></td>
+<td class="metric-start">52.46</td>
+<td>51.67</td>
+<td>53.26</td>
+<td class="metric-start"><u>59.65</u></td>
+<td><u>58.87</u></td>
+<td><u>60.42</u></td>
+<td class="metric-start"><strong>55.21</strong></td>
+<td><strong>54.47</strong></td>
+<td><strong>55.95</strong></td>
+<td class="metric-start"><u>54.18</u></td>
+<td><u>53.27</u></td>
+<td><u>55.09</u></td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>TCoVP-M-4B (Ours) (Molmo2-4B)</strong></th>
+<td class="metric-start"><strong>55.37</strong></td>
+<td><strong>54.50</strong></td>
+<td><strong>56.25</strong></td>
+<td class="metric-start"><strong>53.00</strong></td>
+<td><strong>52.09</strong></td>
+<td><u>53.92</u></td>
+<td class="metric-start"><strong>60.17</strong></td>
+<td><strong>59.28</strong></td>
+<td><strong>61.05</strong></td>
+<td class="metric-start"><u>54.51</u></td>
+<td><u>53.78</u></td>
+<td><u>55.24</u></td>
+<td class="metric-start"><strong>54.33</strong></td>
+<td><strong>53.37</strong></td>
+<td><strong>55.28</strong></td>
+</tr>
+</tbody></table>
+          </div>
+        </div>
+        <div id="panel-general" class="tab-panel">
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Table 2: General VRS results; scroll horizontally to see all metrics">
+            <table class="paper-table table-2" data-source="tab:vrs">
+<caption><span class="table-number">Table 2.</span> Performance comparison on Video Reasoning Segmentation benchmarks. Best results are <strong>bolded</strong>, and the second best results are <u>underlined</u>.</caption>
+<thead><tr>
+<th scope="col" rowspan="2">Methods</th>
+<th scope="col" rowspan="2">MLLM</th>
+<th scope="colgroup" colspan="3" class="benchmark">Long-RVOS</th>
+<th scope="colgroup" colspan="3" class="benchmark">ReasonVOS</th>
+<th scope="colgroup" colspan="3" class="benchmark">ReVOS</th>
+<th scope="colgroup" colspan="3" class="benchmark">MeViS</th>
+</tr>
+<tr class="metric-row">
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+</tr>
+</thead><tbody>
+<tr class="table-group"><th colspan="14" scope="rowgroup"><em><strong>SFT-based Methods</strong></em></th></tr>
+<tr class="rule-above">
+<th scope="row">VISA-7B <span class="table-reference">(<span title="Visa: Reasoning video object segmentation via large language models">Yan et al., 2024</span>)</span></th>
+<td>Chat-UniVi-7B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">46.9</td>
+<td>44.9</td>
+<td>49.0</td>
+<td class="metric-start">43.5</td>
+<td>40.7</td>
+<td>46.3</td>
+</tr>
+<tr>
+<th scope="row">VISA-13B <span class="table-reference">(<span title="Visa: Reasoning video object segmentation via large language models">Yan et al., 2024</span>)</span></th>
+<td>Chat-UniVi-13B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">50.9</td>
+<td>48.8</td>
+<td>52.9</td>
+<td class="metric-start">44.5</td>
+<td>41.8</td>
+<td>47.1</td>
+</tr>
+<tr>
+<th scope="row">VideoLISA-3.8B <span class="table-reference">(<span title="One token to seg them all: Language instructed reasoning segmentation in videos">Bai et al., 2024</span>)</span></th>
+<td>LLaVA-Phi-3-V</td>
+<td class="metric-start">14.0</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">47.5</td>
+<td>45.1</td>
+<td>49.9</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">44.4</td>
+<td>41.3</td>
+<td>47.6</td>
+</tr>
+<tr>
+<th scope="row">InstructSeg-3B <span class="table-reference">(<span title="Instructseg: Unifying instructed visual segmentation with multi-modal large language models">Wei et al., 2025</span>)</span></th>
+<td>Mipha-3B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">54.5</td>
+<td>52.0</td>
+<td>56.9</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<th scope="row">HyperSeg-3B <span class="table-reference">(<span title="HyperSeg: Towards Universal Visual Segmentation with Large Language Model">Wei et al., 2024</span>)</span></th>
+<td>Mipha-3B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">55.7</td>
+<td>53.1</td>
+<td>58.4</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<th scope="row">GLUS-7B <span class="table-reference">(<span title="Glus: Global-local reasoning unified into a single large language model for video segmentation">Lin et al., 2025</span>)</span></th>
+<td>LLaVA-7B</td>
+<td class="metric-start">25.7</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">49.9</td>
+<td>47.5</td>
+<td>52.4</td>
+<td class="metric-start">54.8</td>
+<td>52.4</td>
+<td>57.3</td>
+<td class="metric-start">51.3</td>
+<td>48.5</td>
+<td>54.2</td>
+</tr>
+<tr>
+<th scope="row">VRS-HQ-7B <span class="table-reference">(<span title="The devil is in temporal token: High quality video reasoning segmentation">Gong et al., 2025</span>)</span></th>
+<td>Chat-UniVi-7B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">59.1</td>
+<td>56.6</td>
+<td>61.6</td>
+<td class="metric-start">50.6</td>
+<td>47.6</td>
+<td>53.7</td>
+</tr>
+<tr>
+<th scope="row">VRS-HQ-13B <span class="table-reference">(<span title="The devil is in temporal token: High quality video reasoning segmentation">Gong et al., 2025</span>)</span></th>
+<td>Chat-UniVi-13B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">60.0</td>
+<td>57.6</td>
+<td>62.5</td>
+<td class="metric-start">50.9</td>
+<td>48.0</td>
+<td>53.7</td>
+</tr>
+<tr class="table-group"><th colspan="14" scope="rowgroup"><em><strong>RL-based Methods</strong></em></th></tr>
+<tr class="rule-above">
+<th scope="row">Omni-R1-8B <span class="table-reference">(<span title="Omni-R1: Reinforcement Learning for Omnimodal Reasoning via Two-System Collaboration">Zhong et al., 2025</span>)</span></th>
+<td>Qwen2.5-Omni-7B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">56.2</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<th scope="row">Videoseg-R1-3B <span class="table-reference">(<span title="Videoseg-r1: reasoning video object segmentation via reinforcement learning">Xu et al., 2026</span>)</span></th>
+<td>Qwen2.5-VL-3B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">58.6</td>
+<td>56.4</td>
+<td>60.8</td>
+<td class="metric-start">53.0</td>
+<td>50.7</td>
+<td>55.3</td>
+</tr>
+<tr>
+<th scope="row">ReVSeg-7B <span class="table-reference">(<span title="ReVSeg: Incentivizing the Reasoning Chain for Video Segmentation with Reinforcement Learning">Li et al., 2025</span>)</span></th>
+<td>Qwen2.5-VL-7B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">64.8</td>
+<td>61.8</td>
+<td>67.7</td>
+<td class="metric-start">62.1</td>
+<td>59.3</td>
+<td>65.0</td>
+<td class="metric-start">59.8</td>
+<td>56.1</td>
+<td><u>63.4</u></td>
+</tr>
+<tr>
+<th scope="row">RCoT-Seg-3B <span class="table-reference">(<span title="RCoT-Seg: Reinforced Chain-of-Thought for Video Reasoning and Segmentation">Wen et al., 2026</span>)</span></th>
+<td>Qwen2.5-VL-3B</td>
+<td class="metric-start">-</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">58.2</td>
+<td>54.6</td>
+<td>61.8</td>
+<td class="metric-start">61.2</td>
+<td>58.2</td>
+<td>64.3</td>
+<td class="metric-start">53.7</td>
+<td>50.7</td>
+<td>56.7</td>
+</tr>
+<tr>
+<th scope="row">Veason-R1-3B <span class="table-reference">(<span title="Reinforcing Video Reasoning Segmentation to Think Before It Segments">Gong et al., 2026</span>)</span></th>
+<td>Qwen2.5-VL-3B</td>
+<td class="metric-start">51.8</td>
+<td>50.8</td>
+<td>52.7</td>
+<td class="metric-start">55.2</td>
+<td>51.8</td>
+<td>58.5</td>
+<td class="metric-start">59.9</td>
+<td>56.9</td>
+<td>62.8</td>
+<td class="metric-start">51.2</td>
+<td>48.2</td>
+<td>54.2</td>
+</tr>
+<tr>
+<th scope="row">VideoSEG-O3-2B <span class="table-reference">(<span title="VideoSEG-O3: A Multi-turn Reinforcement Learning Framework for Reasoning Video Object Segmentation">Dai et al., 2026</span>)</span></th>
+<td>Qwen3-VL-2B</td>
+<td class="metric-start">54.8</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">60.2</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">64.8</td>
+<td>62.0</td>
+<td>67.5</td>
+<td class="metric-start">55.6</td>
+<td>52.5</td>
+<td>58.6</td>
+</tr>
+<tr>
+<th scope="row">VideoSEG-O3-4B <span class="table-reference">(<span title="VideoSEG-O3: A Multi-turn Reinforcement Learning Framework for Reasoning Video Object Segmentation">Dai et al., 2026</span>)</span></th>
+<td>Qwen3-VL-4B</td>
+<td class="metric-start">57.4</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">62.9</td>
+<td>-</td>
+<td>-</td>
+<td class="metric-start">67.7</td>
+<td>65.0</td>
+<td>70.4</td>
+<td class="metric-start"><u>60.0</u></td>
+<td><u>57.0</u></td>
+<td>63.0</td>
+</tr>
+<tr class="ours rule-above">
+<th scope="row"><strong>TCoVP-3B (Ours)</strong></th>
+<td>Qwen2.5-VL-3B</td>
+<td class="metric-start"><u>65.6</u></td>
+<td><u>64.7</u></td>
+<td><u>66.5</u></td>
+<td class="metric-start"><u>71.6</u></td>
+<td><u>68.8</u></td>
+<td>74.4</td>
+<td class="metric-start">65.3</td>
+<td>62.8</td>
+<td>67.9</td>
+<td class="metric-start">57.3</td>
+<td>54.2</td>
+<td>60.5</td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>TCoVP-4B (Ours)</strong></th>
+<td>Qwen3-VL-4B</td>
+<td class="metric-start">65.1</td>
+<td>64.5</td>
+<td>65.7</td>
+<td class="metric-start"><strong>72.1</strong></td>
+<td><strong>69.1</strong></td>
+<td><strong>75.0</strong></td>
+<td class="metric-start"><u>68.0</u></td>
+<td><u>65.3</u></td>
+<td><u>70.7</u></td>
+<td class="metric-start">59.5</td>
+<td>56.3</td>
+<td>62.6</td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>TCoVP-M-4B (Ours)</strong></th>
+<td>Molmo2-4B</td>
+<td class="metric-start"><strong>67.4</strong></td>
+<td><strong>66.8</strong></td>
+<td><strong>67.9</strong></td>
+<td class="metric-start">71.5</td>
+<td>68.5</td>
+<td><u>74.5</u></td>
+<td class="metric-start"><strong>68.3</strong></td>
+<td><strong>65.7</strong></td>
+<td><strong>70.9</strong></td>
+<td class="metric-start"><strong>65.2</strong></td>
+<td><strong>62.4</strong></td>
+<td><strong>67.9</strong></td>
+</tr>
+</tbody></table>
+          </div>
+        </div>
+        <div id="panel-ablation" class="tab-panel">
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Table 3: Reasoning representation ablation">
+            <table class="paper-table table-3" data-source="tab:ablation_cot">
+<caption><span class="table-number">Table 3.</span> Ablation of the reasoning representation. All entries are <span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span>. The macro average uses five benchmarks once each.</caption>
+<thead><tr>
+<th scope="col" rowspan="1">Model</th>
+<th scope="col" colspan="1" class="benchmark">ReVOS</th>
+<th scope="col" colspan="1" class="benchmark">ReasonVOS</th>
+<th scope="col" colspan="1" class="benchmark">Long-RVOS</th>
+<th scope="col" colspan="1" class="benchmark">GroundMoRe</th>
+<th scope="col" colspan="1" class="benchmark">MeViS</th>
+<th scope="col" colspan="1" class="benchmark">Macro avg.</th>
+</tr>
+</thead><tbody>
+<tr class="rule-above">
+<th scope="row">Veason-R1-3B</th>
+<td class="metric-start">59.9</td>
+<td class="metric-start">55.2</td>
+<td class="metric-start">51.8</td>
+<td class="metric-start">23.5</td>
+<td class="metric-start">51.2</td>
+<td class="metric-start">48.3</td>
+</tr>
+<tr class="rule-above">
+<th scope="row">Text-CoT with answer-VP</th>
+<td class="metric-start">62.0</td>
+<td class="metric-start">65.2</td>
+<td class="metric-start">60.5</td>
+<td class="metric-start">46.3</td>
+<td class="metric-start">54.8</td>
+<td class="metric-start">57.8</td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>TCoVP-3B</strong></th>
+<td class="metric-start"><strong>65.3</strong></td>
+<td class="metric-start"><strong>71.6</strong></td>
+<td class="metric-start"><strong>65.6</strong></td>
+<td class="metric-start"><strong>53.7</strong></td>
+<td class="metric-start"><strong>57.3</strong></td>
+<td class="metric-start"><strong>62.7</strong></td>
+</tr>
+</tbody></table>
+          </div>
+        </div>
+        <div id="panel-training" class="tab-panel">
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Table 4: Training and reward ablation; scroll horizontally to see all metrics">
+            <table class="paper-table table-4" data-source="tab:ablation_stages_reward">
+<caption><span class="table-number">Table 4.</span> Ablation of chain-aligned reinforcement learning and the temporal alignment and spatiotemporal grounding rewards.</caption>
+<thead><tr>
+<th scope="col" rowspan="2">Model</th>
+<th scope="colgroup" colspan="3" class="benchmark">Long-RVOS</th>
+<th scope="colgroup" colspan="3" class="benchmark">ReasonVOS</th>
+<th scope="colgroup" colspan="3" class="benchmark">ReVOS</th>
+<th scope="colgroup" colspan="3" class="benchmark">GroundMoRe</th>
+</tr>
+<tr class="metric-row">
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span>&amp;<span class="math-symbol">F</span></th>
+<th scope="col"><span class="math-symbol">J</span></th>
+<th scope="col"><span class="math-symbol">F</span></th>
+</tr>
+</thead><tbody>
+<tr class="table-group"><th colspan="13" scope="rowgroup"><em><strong>Different Training Strategies</strong></em></th></tr>
+<tr class="rule-above">
+<th scope="row">SFT only</th>
+<td class="metric-start">56.8</td>
+<td>56.2</td>
+<td>57.4</td>
+<td class="metric-start">63.1</td>
+<td>60.3</td>
+<td>65.9</td>
+<td class="metric-start">59.9</td>
+<td>57.1</td>
+<td>62.7</td>
+<td class="metric-start">43.8</td>
+<td>42.5</td>
+<td>45.0</td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>SFT + chain-aligned RL</strong></th>
+<td class="metric-start"><strong>65.6</strong></td>
+<td><strong>64.7</strong></td>
+<td><strong>66.5</strong></td>
+<td class="metric-start"><strong>71.6</strong></td>
+<td><strong>68.8</strong></td>
+<td><strong>74.4</strong></td>
+<td class="metric-start"><strong>65.3</strong></td>
+<td><strong>62.8</strong></td>
+<td><strong>67.9</strong></td>
+<td class="metric-start"><strong>53.7</strong></td>
+<td><strong>52.6</strong></td>
+<td><strong>54.8</strong></td>
+</tr>
+<tr class="table-group"><th colspan="13" scope="rowgroup"><em><strong>Different Reward Functions</strong></em></th></tr>
+<tr class="rule-above">
+<th scope="row">w/o <span class="math-symbol">R</span><sub>ta</sub> and <span class="math-symbol">R</span><sub>stg</sub></th>
+<td class="metric-start">62.5</td>
+<td>62.1</td>
+<td>62.9</td>
+<td class="metric-start">67.4</td>
+<td>64.5</td>
+<td>70.3</td>
+<td class="metric-start">63.1</td>
+<td>60.4</td>
+<td>65.8</td>
+<td class="metric-start">47.9</td>
+<td>46.8</td>
+<td>49.1</td>
+</tr>
+<tr>
+<th scope="row">w/o <span class="math-symbol">R</span><sub>stg</sub></th>
+<td class="metric-start">63.2</td>
+<td>62.6</td>
+<td>63.7</td>
+<td class="metric-start">65.6</td>
+<td>62.7</td>
+<td>68.4</td>
+<td class="metric-start">63.5</td>
+<td>60.8</td>
+<td>66.2</td>
+<td class="metric-start">49.2</td>
+<td>48.0</td>
+<td>50.4</td>
+</tr>
+<tr>
+<th scope="row">w/o <span class="math-symbol">R</span><sub>ta</sub></th>
+<td class="metric-start">64.0</td>
+<td>63.6</td>
+<td>64.4</td>
+<td class="metric-start">68.5</td>
+<td>65.7</td>
+<td>71.4</td>
+<td class="metric-start">63.9</td>
+<td>61.3</td>
+<td>66.6</td>
+<td class="metric-start">48.4</td>
+<td>47.4</td>
+<td>49.5</td>
+</tr>
+<tr class="ours">
+<th scope="row"><strong>TCoVP-3B</strong></th>
+<td class="metric-start"><strong>65.6</strong></td>
+<td><strong>64.7</strong></td>
+<td><strong>66.5</strong></td>
+<td class="metric-start"><strong>71.6</strong></td>
+<td><strong>68.8</strong></td>
+<td><strong>74.4</strong></td>
+<td class="metric-start"><strong>65.3</strong></td>
+<td><strong>62.8</strong></td>
+<td><strong>67.9</strong></td>
+<td class="metric-start"><strong>53.7</strong></td>
+<td><strong>52.6</strong></td>
+<td><strong>54.8</strong></td>
+</tr>
+</tbody></table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section content" id="method" aria-labelledby="method-title">
+      <div class="section-heading"><p class="eyebrow">The idea</p><h2 id="method-title">Make every visual reference explicit.</h2></div>
+      <p class="section-intro">An entity can stay in view long after the queried action ends. TCoVP links observations across frames and separates the target’s relevant action interval from its overall presence in the video.</p>
+      <ol class="method-steps">
+        <li><span class="step-number">01</span><h3>Ground the evidence</h3><p>Record relevant entities with an identity, a timestamped bounding box, and temporal support. Reuse identifiers to connect observations.</p></li>
+        <li><span class="step-number">02</span><h3>Reason across time</h3><p>Interleave language with chronologically ordered primitives to resolve interactions, event order, and the intended target.</p></li>
+        <li><span class="step-number">03</span><h3>Turn primitives into masks</h3><p>Prompt SAM3 with the selected target boxes. For motion-grounded queries, restrict mask output to the predicted action interval.</p></li>
+      </ol>
+      <figure class="paper-figure">
+        <a class="figure-link" href="assets/reasoning.png" target="_blank" rel="noopener"><img src="assets/reasoning.png" width="2800" height="1391" loading="lazy" alt="A comparison of text-only keyframe reasoning and TCoVP for a hand-clasp followed by a hug. TCoVP grounds the athlete and coach separately and localizes the relevant hand-clasp interval."></a>
+        <figcaption><strong>Reasoning with a temporal chain.</strong> TCoVP distinguishes the hand-clasp from the later hug, grounds the coach as the target, and converts the selected primitive into a mask trajectory.</figcaption>
+      </figure>
+      <div class="subsection-heading"><p class="eyebrow">Learning to ground the chain</p><h3>Supervised initialization. Chain-aligned reinforcement.</h3><p>Supervised fine-tuning teaches the representation. Reinforcement learning then rewards structural validity, temporal alignment, spatiotemporal grounding, and target primitive accuracy.</p></div>
+      <figure class="paper-figure">
+        <a class="figure-link" href="assets/training.png" target="_blank" rel="noopener"><img src="assets/training.png" width="2800" height="1191" loading="lazy" alt="Training pipeline with multiple TCoVP completions, four chain-aligned rewards, group-normalized advantages, reference-policy KL regularization, and SAM3 mask propagation."></a>
+        <figcaption><strong>Chain-aligned training and mask execution.</strong> Multiple candidate chains receive grounded rewards; selected target primitives supply timestamped box prompts to SAM3.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section content" id="data" aria-labelledby="data-title">
+      <div class="section-heading"><p class="eyebrow">Training data</p><h2 id="data-title">From mask annotations to grounded reasoning.</h2></div>
+      <p class="section-intro">Two corpora built from the training splits of ReVOS, MeViS, Long-RVOS, and GroundMoRe, covering single-target, multi-target, and zero-target queries.</p>
+      <div class="dataset-grid">
+        <article><span class="dataset-stage">Stage 01 · Supervised fine-tuning</span><h3>TCoVP-SFT-15k</h3><p>Complete reasoning trajectories interleaved with temporal video primitives teach the canonical chain serialization.</p></article>
+        <article><span class="dataset-stage">Stage 02 · Reinforcement learning</span><h3>TCoVP-RL-13k</h3><p>Examples with reward-compatible primitive annotations support temporal, spatial, and target-level supervision.</p></article>
+      </div>
+      <figure class="paper-figure">
+        <a class="figure-link" href="assets/data-pipeline.png" target="_blank" rel="noopener"><img src="assets/data-pipeline.png" width="2800" height="1049" loading="lazy" alt="Data construction pipeline: video and mask preprocessing, Kimi-K2.5 temporal chain annotation, chain-consistency checking, and Qwen2.5-VL primitive filtering to form the SFT and RL datasets."></a>
+        <figcaption><strong>Constructing TCoVP supervision.</strong> Kimi-K2.5 proposes temporal chains. Consistency checks and Qwen2.5-VL filtering retain primitives grounded in the sampled video.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section content" id="examples" aria-labelledby="examples-title">
+      <div class="section-heading"><p class="eyebrow">Qualitative examples</p><h2 id="examples-title">Follow the evidence to the right target.</h2></div>
+      <p class="section-intro">Explicit references help distinguish contextual participants from the queried object, and recognize when the requested target is absent.</p>
+      <div class="tab-group" data-tab-group>
+        <div class="tab-list" aria-label="Qualitative examples"><button type="button" id="tab-basketball" data-tab="panel-basketball">An object in a brief action</button><button type="button" id="tab-absent" data-tab="panel-absent">When no target exists</button></div>
+        <div class="tab-panel" id="panel-basketball">
+          <div class="example-intro"><span class="case-label">GroundMoRe · TCoVP-4B</span><h3>Track the basketball, resolve the shot attempt.</h3><p>The query asks what the man in white misses after dribbling between the police officer’s legs. TCoVP separates the basketball from the contextual participants and grounds the relevant interval at 9.3–11.7 seconds.</p></div>
+          <figure class="paper-figure"><a class="figure-link" href="assets/example-basketball.png" target="_blank" rel="noopener"><img src="assets/example-basketball.png" width="2723" height="1886" loading="lazy" alt="TCoVP-4B and VideoSEG-O3-4B comparison on a basketball shot: the TCoVP chain grounds the participants and basketball separately and tracks the ball during the shot attempt."></a><figcaption>Timestamped boxes provide spatial evidence for the basketball during the relevant action interval.</figcaption></figure>
+        </div>
+        <div class="tab-panel" id="panel-absent">
+          <div class="example-intro"><span class="case-label">Zero-target reasoning · TCoVP-3B</span><h3>A plausible description is not evidence of an object.</h3><p>The query asks for “the turtle in the water,” but no turtle appears. TCoVP grounds the visible water and fish, concludes that the target is absent, and returns an empty answer.</p></div>
+          <figure class="paper-figure"><a class="figure-link" href="assets/example-zero-target.png" target="_blank" rel="noopener"><img src="assets/example-zero-target.png" width="2800" height="1279" loading="lazy" alt="Zero-target comparison: Veason-R1 predicts a turtle where none is present, while TCoVP grounds the fish and water and produces an empty target set."></a><figcaption>Grounding visible entities helps avoid an unsupported target prediction.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section citation-section content" id="citation" aria-labelledby="citation-title">
+      <div class="section-heading"><p class="eyebrow">Reference</p><h2 id="citation-title">Citation</h2></div>
+      <!-- CITATION: Intentionally blank. Add the final BibTeX entry inside this code element. -->
+      <pre class="citation-box blank-area" aria-label="Reserved space for the citation"><code id="bibtex"></code></pre>
+    </section>
+  </main>
+  <footer class="site-footer content"><a href="#top">Back to top ↑</a><p>Think Visually Across Space and Time</p></footer>
+</body>
+</html>

@@ -1,0 +1,51 @@
+# TCoVP — dynamic project page
+
+The dynamic TCoVP page lives at `docs/next/`. On the `feat/tcovp-dynamic-showcase` publishing branch, `docs/index.html` is a minimal HTML entry that redirects to `./next/`. It also provides a clickable link that works without JavaScript. The original homepage is preserved byte-for-byte at `docs/original.html`, with its assets and scripts in their existing locations.
+
+## Preview
+
+From the repository root:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1 --directory docs
+```
+
+Open <http://127.0.0.1:8765/> to check the publishing redirect, <http://127.0.0.1:8765/next/> for the new page, or <http://127.0.0.1:8765/original.html> for the preserved original. Serve the whole `docs` directory: the new page reuses figures and the full demonstration video from `docs/assets`. A web server is required for the JSON-driven samples and results.
+
+No build step, framework, analytics, or third-party runtime is required. The page supports mobile layouts, keyboard navigation, reduced-motion preferences, pausable animation, image expansion, sample filtering, evidence-frame seeking, and interactive result tables.
+
+## Content and provenance
+
+- Scientific content, author information, method illustrations, and reported results follow the supplied **Think Visually Across Space and Time: Grounded Reasoning for Video Segmentation** manuscript. The supplied PDF is bundled in `assets/TCoVP_arXiv.pdf`.
+- `results-data.json` preserves the four full result tables from the original page. The charts use those reported scores; the GroundMoRe headline comparison uses the same Qwen3-VL-4B backbone.
+- `samples-data.json` combines the three original **recorded demonstrations** with actual checkpoint runs on GroundMoRe and ReVOS clips. All are replayable outputs, not live inference. Sample video time is the replay clock; predicted intervals refer to the labeled source clock. The absence example returns an empty target mask.
+- The short clips are crops of the existing `docs/assets/video_demo_with_cover.mp4`: hand-clasp at recording seconds 10–30, store at 48–68, and absence at 94–111.4. Each uses the source video viewport at x=476, y=342, width=1032, height=580. Existing annotations are baked into the source recording. Posters and evidence thumbnails are stills from that recording.
+- The hero's animated chain illustrates Figure 1. Its step animation is explanatory and is not synchronized model inference.
+- Benchmark examples include source attribution, a same-clock original/mask switch, the unchanged generated trace, and explicit qualitative limitations. Sanitized run metadata is stored beside the media. Private server paths, credentials, signed download URLs, and shared-training logs are not bundled.
+- Fonts (Fredoka, Nunito, and JetBrains Mono) are self-hosted; their OFL license files are in `assets/fonts/`.
+- The opening view includes all six authors in manuscript order, with the original affiliation numbers and contribution notes. Four official institution signatures are self-hosted in `assets/affiliations/`; `sources.json` records the official pages, original asset locations and file hashes. White/reverse originals are displayed on navy without recoloring or stretching.
+
+The visual direction is inspired by the [Xiaomi-Lens-0 project page](https://seerray-lab.github.io/Xiaomi-Lens-0/): rounded typography, warm colors, outlined panels, and motion. The implementation and TCoVP-specific presentation are independent.
+
+## Reasoning examples
+
+The Samples explorer displays the `<think>` body in its original order as numbered observation cards. Entity IDs, temporal supports, boxes, and timestamps are formatted as distinct tokens without rewriting their values or prose. Clicking a timestamp seeks to the mapped video frame; playback highlights the corresponding observation. The `<answer>` is shown separately. The source text remains available in an expandable view and as a download.
+
+New GroundMoRe cases include the exact dataset question, checkpoint output generated on 2026-10-19, raw and masked replays on an identical 6 fps clock, and per-case provenance. Both use 16 uniformly sampled reasoning frames, greedy decoding and the original action prompt/parser, followed by SAM3 with predicted temporal scope and no additional anchor window. The selected targets are coaching_staff (celebration) and girl (lemons). Both predicted intervals cover nearly the whole clip, which remains an action-boundary limitation and is stated in the visible result notes. They are qualitative examples and do not add benchmark scores. Video and mask canvases are preserved; no manual target boxes, mask correction, or replacement of model text is used. The official sources are the [GroundMoRe project](https://groundmore.github.io/) and its [test annotations](https://huggingface.co/datasets/groundmore/GroundMoRe/blob/main/test_v2.json).
+
+The multi-target ReVOS example asks which sheep bump heads, retreat, and collide again. The saved checkpoint answer selects `sheep_1` and `sheep_2` with distinct boxes. Its 30 benchmark frames are replayed at the saved model clock of 3 fps, with the unchanged `<think>` and `<answer>`. The actual checkpoint is `rl_13k_qwen3_vl_4b_qwen25_strict_original_rl/checkpoint-3144`; this is a saved run, not the newer GroundMoRe run. SAM3 used box prompts, bidirectional propagation and full temporal scope. Its binary masks are the union of both predictions, so the page does not invent per-instance colors. The extra region in the first mask is retained and disclosed. Both 0.0–9.7 s supports denote appearance, not headbutt boundaries. Source attribution, license, hashes and rendering details are in `assets/revos/two-sheep/sanitized-provenance.json`. The case uses ReVOS validation annotations; `OVIS/train/cf376cf1` is the underlying collection identifier. The official source is [ReVOS](https://github.com/cilinyan/ReVOS-api), released for noncommercial research under CC BY-NC-SA 4.0.
+
+The three original recorded-demo examples include verified visual transcriptions of the recorded reasoning and answer panels. Their `<think>` wrappers are added for display, with provenance disclosed. Their timestamps refer to the original scene and do not seek the cropped replay, whose clock differs. The store transcript contains only complete visible observations through scene second39.0; the source recording cuts off the final sentence, which is omitted. The full verified answer is preserved. These transcripts are not recovered raw inference files or new runs.
+
+## Files
+
+- `index.html`, `style.css`, `app.js`: page, responsive styling, and interactions.
+- `samples-data.json`: sample content and replay metadata.
+- `results.js`, `results-data.json`: result views and manuscript tables.
+- `assets/`: local fonts, PDF, video excerpts, and stills.
+
+## Publishing entry
+
+When GitHub Pages serves `feat/tcovp-dynamic-showcase` from `/docs`, the existing project URL opens `docs/index.html` and redirects to the dynamic page at `next/`. The new page’s original-page link, JavaScript error fallback, and no-JavaScript results link point to `original.html` (with `#results` where appropriate).
+
+`docs/original.html` is byte-for-byte identical to `origin/main:docs/index.html`. The `main` branch is not modified. GitHub Pages source settings are managed separately; these files do not change repository settings.
